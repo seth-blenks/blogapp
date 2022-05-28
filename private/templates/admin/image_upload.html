@@ -1,0 +1,13 @@
+
+<div class='card'>
+	<div class='card-body'>
+		<div class='card-title'> Upload Image </div>
+		<div id='alert-box'></div>
+		<input type='hidden' name="csrf-token" value="{{csrf_token}}" id="image-submit-csrf"/>
+		<input type='file' class='collapse' multiple="" id="image-upload" accept='.jpg,.png' />
+		<div class='d-flex justify-content-between'>
+			<label for="image-upload" id="image-upload-label" class="btn btn-outline-primary col-9">Choose Image </label>
+			<button id='image-submit' class='col-2 btn btn-secondary'><i class='ri-upload-cloud-2-line'></i></button>
+		</div>
+	</div>
+</div>

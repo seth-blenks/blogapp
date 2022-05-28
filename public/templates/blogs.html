@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  {% from 'macro.html' import header,links,footer,scripts, meta with context %}
+  {{meta()}}
+  {{links()}}
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TS5K4PCDJZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TS5K4PCDJZ');
+</script>
+</head>
+
+<body>
+  <style>
+    .my-image{
+      width: 100%;
+    }
+
+    .disabled{
+      pointer-events: none;
+    }
+  </style>
+
+  {{header()}}
+
+
+  <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section id="breadcrumbs" class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Blog</h2>
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li>Blog</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <!-- ======= Blog Section ======= -->
+    <section id="blog" class="blog">
+      <div class="container" data-aos="fade-up">
+
+        <div class="row">
+
+          <div class="col-lg-8 entries">
+            {% for blog in articles %}
+            <article itemscope itemtype='https://schema.org/BlogPosting' class="entry">
+
+              <div class="entry-img">
+                <div class='collapse' itemprop='image'>/static/images/{{blog.image.name}}</div>
+                <img  src="/static/images/{{blog.image.name}}" alt="" class="my-image">
+              </div>
+
+              <h2 class="entry-title">
+                <a itemprop='name' href="{{url_for('blog_details',title=blog.title)}}">{{blog.title}}</a>
+              </h2>
+
+              <div class="entry-meta">
+                <div><i class="bi bi-clock"></i> <a href="blog-single.html"><time datetime="{{blog.updated_date.strftime('%y-%m-%d')}}">{{blog.updated_date.strftime('%A %d %B %Y')}}</time></div>
+                <ul>
+                  <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="blog-single.html">{{blog.user.username}}</a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="blog-single.html">{{blog.comments.count()}}</a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-heart"></i> <a href="blog-single.html">{{blog.reads}}</a></li>
+                </ul>
+              </div>
+
+              <div class="entry-content">
+                <p itemprop='description'>
+                  {{blog.description}}
+                </p>
+                <div class="read-more">
+                  <a href="{{url_for('blog_details',title=blog.title)}}">Read More</a>
+                </div>
+              </div>
+
+            </article><!-- End blog entry -->
+
+            {% endfor %}
+            <div class='container-fluid'>
+            <div class="blog-pagination">
+              <ul class="justify-content-center">
+                {% for page in pagination.iter_pages(1,1,2,1) %}
+                {% if not page %}
+                <li class="disabled"><a href='#'>...</a></li>
+                {% else %}
+                <li class="{% if pagination.page == page %} active {% endif %}"><a href="?{% if types['q'] %}q={{types['q']}}&type={{types['type']}}{% endif %}&page={{page}}">{{page}}</a></li>
+                {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+            </div>
+
+          </div><!-- End blog entries list -->
+
+          <div class="col-lg-4">
+
+            <div class="sidebar">
+
+              <h3 class="sidebar-title">Search</h3>
+              <div class="sidebar-item search-form">
+                <div id='search-input'>
+                  <input type="text" placeholder='search ...'>
+                </div>
+                <div id='search-result'></div>
+              </div><!-- End sidebar search form-->
+
+              <h3 class="sidebar-title">Categories</h3>
+              <div class="sidebar-item categories">
+                <ul>
+                  {% for category in categories %}
+                  <li><a href="/search?q={{category.name}}&type=category">{{category.name}} </a></li>
+                  {% endfor %}
+                </ul>
+              </div><!-- End sidebar categories-->
+
+              <h3 class="sidebar-title">Recent Posts</h3>
+              <div class="sidebar-item recent-posts">
+                {% for other in others %}
+                {% if blog %}
+                  {% if other.id != blog.id %}
+                    <div class="post-item clearfix">
+                      <img src="/static/images/{{other.image.name}}" alt="">
+                      <h4><a href="{{url_for('blog_details',title=other.title)}}">{{other.title}}</a></h4>
+                      <time datetime="{{other.updated_date.strftime('%y-%m-%d')}}">{{other.updated_date.strftime('%w %B %Y')}}</time>
+                    </div>
+                  {% endif %}
+                {% endif %}
+                {% endfor %}
+              </div><!-- End sidebar recent posts-->
+
+              <h3 class="sidebar-title">Tags</h3>
+              <div class="sidebar-item tags">
+                <ul>
+                  {% for tag in tags %}
+                  <li><a href="/search?q={{tag.name}}&type=tag">{{tag.name}}</a></li>
+                  {% endfor %}
+                </ul>
+              </div><!-- End sidebar tags-->
+
+            </div><!-- End sidebar -->
+
+          </div><!-- End blog sidebar -->
+
+        </div>
+
+      </div>
+    </section><!-- End Blog Section -->
+
+  </main><!-- End #main -->
+  {{footer()}}
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  {{scripts()}}
+  <script>
+    let search_input = document.querySelector('#search-input input')
+    let search_button = document.querySelector('#search-input button')
+    let search_screen = document.querySelector('#search-result')
+
+
+    search_input.addEventListener('input', function(){
+      let value = search_input.value
+      if(value){
+        let formdata = new FormData()
+        formdata.append('q',value)
+        fetch('{{url_for("search")}}',{
+          'method': 'POST',
+          'body': formdata
+        }).then(response => response.json()).then(data => {
+            search_screen.innerHTML = ''
+            let content = `<ul class='my-1'>`
+            data.forEach( _data => {
+              content += `<li>
+              <p><a href='/blogs/${_data['title']}.html' > ${_data['title']} </a></br>
+               ${_data['description']}</p>
+              </li>`
+            });
+            content += `</ul>`
+
+            search_screen.innerHTML = content
+        })
+      }
+    })
+  </script>
+
+</body>
+
+</html>

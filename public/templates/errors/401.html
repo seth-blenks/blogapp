@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  {% from 'macro.html' import links,footer, meta %}
+  {{meta()}}
+  {{links()}}
+  <style>
+
+  html, body{
+  height: 100%;
+}
+main{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.card{
+  border: none;
+}
+
+.card-body img{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  height: 250px;
+}
+
+.card-body{
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+</style>
+</head>
+<body>
+	<main>
+		<div class='col-10 col-lg-6 col-md-6'>
+			<div class='card' style='height: 350px'>
+				<div class='card-body'>
+					<img src='/static/img/failed.png' alt='An image of an empty page' />
+					<h1> You are not Authorized to Access this Page</h1>
+				</div>
+			</div>
+		</div>
+	</main>
+</body>
+</html>
+

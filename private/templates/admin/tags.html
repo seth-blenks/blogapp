@@ -1,0 +1,36 @@
+<div class='card' >
+	<div class='card-body'>
+		<div class='card-title'>Tags and Categories</div>
+		<div class='row'>
+			<div class='p-2 col-8'>
+				<h3>Tags</h3>
+				{% for tag in tags %}
+				<span class='badge border-secondary border-1 text-secondary'>{{tag.name}}</span>
+				{% endfor %}
+				<h3> Categories</h3>
+				{% for category in categories %}
+				<span class='badge border-secondary border-1 text-primary'>{{category.name}}</span>
+				{% endfor %}
+			</div>
+			<div class='col-4'>
+				<input type='hidden' name='csrf-token' value='{{csrf_token}}' id='tags-csrf-token' />
+				<select class='form-select mb-1' id='tags-select'>
+					<option> Tag </option>
+					<option> Category</option>
+				</select>
+				<input class='form-control mb-1' type="text" placeholder='name of tag ...' id='tags-name'>
+				<button class='btn btn-secondary form-control' id='tags-submit'>Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Small Modal -->
+        <div class="modal fade" id="smallModal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-body"></div>
+          </div>
+        </div>
+        </div><!-- End Small Modal-->
+  <button type="button" class="btn btn-primary collapse" data-bs-toggle="modal" data-bs-target="#smallModal" id='modal-launcher'></button>

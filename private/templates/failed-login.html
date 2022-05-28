@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<title>Sign Up: Folow us</title>
+</head>
+<body>
+  <style>
+html, body{
+  height: 100%;
+}
+  main{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  input, form{
+    margin: 1rem 0px;
+  }
+
+  .custom-button{
+    background-color:  #008890;
+    color:  #fff;
+  }
+
+  img{
+    max-width: 360px;
+    width: 100%;
+    height: 150px;
+    display: block;
+  }
+
+  main > div{
+    display: flex;
+    flex-direction: column;
+  }
+
+  main > div > img{
+    align-self: center;
+  }
+  
+  </style>
+<main>
+	<div class="col-11 col-lg-5 col-md-7">
+        <img src='/static/img/brand.png' />
+        <h2> Unable to Login </h2>
+        <p> You have made five failed attempts to login to this account. Wait for {{time}} and try again </p>
+      </div>
+  </main>
+
+
+    <script>
+      let password = document.querySelector('#forgot-password');
+      password.addEventListener('click',function(){
+        fetch('{{url_for("user_password_reset")}}').then(response => response.json()).then( data => {
+          document.querySelector('#password-alert').innerHTML = `
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+             ${data}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          `
+        })
+      })
+    </script>
+</body>
+</html>

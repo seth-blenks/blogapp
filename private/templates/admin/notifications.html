@@ -1,0 +1,38 @@
+<div>
+	<li class="dropdown-header">
+	  <a href='#' id='notification-mark-all'>Mark all as read </a>
+	</li>
+	{% for notification in pag.items %}
+	<li>
+	  <hr class="dropdown-divider">
+	</li>
+
+	<li class="notification-item" data-id="{{notification.id}}" data-link='{{notification.link}}'>
+	  <i class="
+	  {% if notification.notification_type == Ntype.COMMENT.value %} bx bxs-message-alt-detail text-success
+	  {% elif notification.notification_type == Ntype.EMAIL.value %} bx bx-envelope text-warning
+	  {% elif notification.notification_type == Ntype.LIKE.value %} bx bxs-like text-primaryp
+	  {% else %} bx bx-notification {% endif %} {% if notification.seen %} text-muted {% endif %}"></i>
+	  <div>
+	    <h4>{{notification.name}}</h4>
+	    <p>{{notification.message | safe}}</p>
+	    <p>{{notification.date}}</p>
+	  </div>
+	</li>
+	{% endfor %}
+
+	<li>
+	  <hr class="dropdown-divider">
+	</li>
+
+	<li class="dropdown-footer">
+		<div class='row justify-content-between '>
+			<div class='col-5'>
+	  			<button data-page='{{pag.page - 1}}' class='btn btn-small btn-primary {% if not pag.has_prev %} disabled {% endif %} notification-navs'> Prev </button>
+			</div>
+			<div class='col-5'>
+				<button data-page='{{pag.page + 1}}' class='btn btn-small btn-primary{% if not pag.has_next %} disabled {% endif %} notification-navs'> Next </button>
+			</div>
+		</div>
+	</li>
+</div>

@@ -1,0 +1,31 @@
+<div class='card'>
+	<div class='card-body'>
+		<div class='card-title'>Compose Email </div>
+		<div class='info'></div>
+		<div class='form' id='compose-email'>
+			<input type='hidden' name='csrf-token' value='{{csrf_token}}' />
+			<input type='text' name='compose-email-subject' required="" placeholder='Subject ...'>
+			<select>
+				<option selected> All Users </option>
+				<option> Specific User </option>
+			</select>
+			<input type='text' class='collapse' name='compose-email-user-email' placeholder='Enter user Email' />
+			<textarea name='product-description' required="" placeholder="Message ..."></textarea>
+			<button class='btn btn-primary'  type='submit'><span> Create </span><i class='bi bi-node-plus-fill'></i> </button>
+		</div>
+	</div>
+</div>
+<style>
+	
+	#compose-email{
+    display: flex;
+		flex-direction: column;
+	}
+
+#compose-email input, #compose-email textarea, #compose-email select{
+	margin-bottom: 1rem;
+	padding: 0.5rem;
+	font-size: 0.95rem;
+}
+
+</style>

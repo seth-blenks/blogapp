@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  {% from 'macro.html' import header,links,footer,scripts, meta  with context%}
+
+  {{links()}}
+  {{meta()}}
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TS5K4PCDJZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-TS5K4PCDJZ');
+  
+</script>
+</head>
+
+<body>
+  <style>
+  section{
+    min-height: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .section-grey{
+    background-color: #556270;
+    font-size: 1.2rem;
+    color:  #fff;
+  }
+</style>
+  {{header()}}
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero">
+    <div id="heroCarousel" data-bs-interval="5000" class="carousel slide carousel-fade" data-bs-ride="carousel">
+
+      <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
+
+      <div class="carousel-inner" role="listbox">
+
+        <!-- Slide 1 -->
+        <div class="carousel-item active" style="background-image: url(/static/img/slide/slide-1.jpg)">
+          <div class="carousel-container">
+            <div class="container">
+
+              <h2 class="animate__animated animate__fadeInUp">Creativity is in the mind. Explore the wonderful thoughts and make them a reality</h2>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-item" style="background-image: url(/static/img/slide/slide-2.jpg)">
+          <div class="carousel-container">
+            <div class="container">
+              <h2 class="animate__animated animate__fadeInDown">Time Management is Key</h2>
+              <p class="animate__animated animate__fadeInUp">I do things quickly and skillfully. I don't belive in prolongedlabour.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="carousel-item" style="background-image: url(/static/img/slide/slide-3.jpg)">
+          <div class="carousel-container">
+            <div class="container">
+              <h2 class="animate__animated animate__fadeInDown">Don't Settle for Less</h2>
+              <p class="animate__animated animate__fadeInUp">You miss opportunities because you sleep on your talent. Wake up! Start working on yourself and self yourself rise to glory.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <a class="carousel-control-prev" href="#heroCarousel" role="button" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+      </a>
+
+      <a class="carousel-control-next" href="#heroCarousel" role="button" data-bs-slide="next">
+        <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+      </a>
+
+    </div>
+  </section><!-- End Hero -->
+
+  <main id="main">
+
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+      <div class="container">
+        <div class="row content">
+          <div class="col-lg-6">
+            <h2>My Art</h2>
+            <h3>The zeal to learn, unlearn and relearn keeps me going.</h3>
+          </div>
+          <div class="col-lg-6 pt-4 pt-lg-0">
+            <p>
+              Quality time has been put in the development of my programming skill. I have worked extensively with web design languages, as well as backend development technologies such as python, node.js, postgresql, sqlite, bootstrap, css , react.js, javascript, flask, shell, linux and window OS etc. Collectively, I am a full-stack web developer with over 5 years of experience. I deliver fabulous websites that meet the needs of customers.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End About Section -->
+
+    <section class='section-grey'>
+      <div class='container'>
+        <div class='row content justify-content-between align-items-center'>
+          <img class='col-12 col-lg-4 mb-sm-1 mb-md-1' src='/static/img/jar.jpg' alt='Cheap and Affordable service.' />
+          <div class='col-lg-6'>
+            <h2><em>Cheap</em> and Affordable Service </h2>
+            <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= Services Section ======= -->
+    <section id="services" class="services">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="icon-box">
+              <i class="bi bi-phone"></i>
+              <h4><a href="#">Website Design and Development</a></h4>
+              <p>Develope your website at a cheap and afforable price.</p>
+            </div>
+          </div>
+          <div class="col-md-6 mt-4 mt-md-0">
+            <div class="icon-box">
+              <i class="bi bi-wrench"></i>
+              <h4><a href="#">Postgresql Database Management</a></h4>
+              <p>Are your a database administrator. Get our packages on database management and restoration.</p>
+            </div>
+          </div>
+          <div class="col-md-6 mt-4 mt-md-0">
+            <div class="icon-box">
+              <i class="bi bi-search"></i>
+              <h4><a href="#">Search Engine Optimized Contents.</a></h4>
+              <p>Get a search engine optimization for you website and start appear on google result search results.</p>
+            </div>
+          </div>
+          <div class="col-md-6 mt-4 mt-md-0">
+            <div class="icon-box">
+              <i class="bi bi-lightning"></i>
+              <h4><a href="#">Logo and Banner Design</a></h4>
+              <p>Get a nice logo and banner for your business or advertisement purposes at a very afforable rate.</p>
+            </div>
+          </div>
+          <div class="col-md-6 mt-4 mt-md-0">
+            <div class="icon-box">
+              <i class="bi bi-chat-left-text"></i>
+              <h4><a href="#">Social media api integration.</a></h4>
+              <p>I add social media links to websites.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End Services Section -->
+
+    <!-- ======= Portfolio Section ======= -->
+    <section id="portfolio" class="portfolio">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-lg-12 d-flex justify-content-center">
+            <ul id="portfolio-flters">
+              <li data-filter="*" class="filter-active">All</li>
+              <li data-filter=".filter-logo">Logos</li>
+              <li data-filter=".filter-card">Banners</li>
+              <li data-filter=".filter-web">Web</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row portfolio-container">
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+            <div class="portfolio-wrap">
+              <img src="/static/img/portfolio/portfolio-1.png" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Bed Sheet Flyer</h4>
+                <div class="portfolio-links">
+                  <a href="/static/img/portfolio/portfolio-1.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Bed Sheet Flyer"><i class="bx bx-plus"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+            <div class="portfolio-wrap">
+              <img src="/static/img/portfolio/kiki.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Kiki Salon</h4>
+                <div class="portfolio-links">
+                  <a href="https://github.io/seth-blenks/seth-kiki/" class="portfolio-details-lightbox" data-glightbox="type: external" title="A simple static website of a hair salon. It showcases the services and cost of services in the salon"><i class="bx bx-link"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+            <div class="portfolio-wrap">
+              <img src="/static/img/portfolio/portfolio-2.png" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Bicycle flyer</h4>
+                <div class="portfolio-links">
+                  <a href="/static/img/portfolio/portfolio-2.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Bicycle Flyer"><i class="bx bx-plus"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+            <div class="portfolio-wrap">
+              <img src="/static/img/portfolio/portfolio-3.png" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Keyboard Application</h4>
+                <div class="portfolio-links">
+                  <a href="/static/img/portfolio/portfolio-3.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Julius tech services. A modern tech business for the greatest."><i class="bx bx-plus"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+            <div class="portfolio-wrap">
+              <img src="/static/img/portfolio/portfolio-4.png" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Vax Trophies</h4>
+                <div class="portfolio-links">
+                  <a href="/static/img/portfolio/portfolio-4.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Vax Trophies"><i class="bx bx-plus"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+            <div class="portfolio-wrap">
+              <img src="/static/img/portfolio/portfolio-5.png" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Event Banner</h4>
+                <div class="portfolio-links">
+                  <a href="/static/img/portfolio/portfolio-5.png" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Event Banner"><i class="bx bx-plus"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-logo">
+            <div class="portfolio-wrap">
+              <img src="/static/img/portfolio/logo1.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Joy Falls</h4>
+                <div class="portfolio-links">
+                  <a href="/static/img/portfolio/logo1.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Joy falls"><i class="bx bx-plus"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-logo">
+            <div class="portfolio-wrap">
+              <img src="/static/img/portfolio/logo2.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Jin Drinks</h4>
+                <div class="portfolio-links">
+                  <a href="/static/img/portfolio/logo2.jpg" data-gallery="portfolioGallery" class="portfolio-lightbox" title="Jin Drinks"><i class="bx bx-plus"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 portfolio-item filter-logo">
+            <div class="portfolio-wrap">
+              <img src="/static/img/portfolio/logo3.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Joy Falls</h4>
+                <div class="portfolio-links">
+                  <a href="#" class="portfolio-details-lightbox" data-glightbox="type: external" title="Joy Falls"><i class="bx bx-link"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
+        </div>
+
+      </div>
+    </section><!-- End Portfolio Section -->
+  </main><!-- End #main -->
+  {{footer()}}
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  {{scripts()}}
+
+</body>
+
+</html>

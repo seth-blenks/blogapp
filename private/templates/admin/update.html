@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Seth Tech: Update {{blog.title}}</title>
+  <link href="{{url_for('static', filename='vendor/quill/quill.snow.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='vendor/simple-datatables/style.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+  <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
+</head>
+<body>
+  <style>
+  #main{
+    margin-left:  0px;
+    margin-top: 0px;
+  }
+  .my-quill-editor-full{
+  min-height: 250px;
+}
+</style>
+  <main class='main' id='main'>
+  <div class='card'>
+  <div class='card-body'>
+      <div class='card-title'><div class='d-flex justify-content-between'><span>Update blog {{blog.title}}</span><button id='update-delete-button' class='btn btn-secondary'>Delete </button></div> </div>
+      <input required="" type='hidden' name='composition-blog-id' value="{{blog.id}}" />
+      {% for category,message in get_flashed_messages(with_categories = True) %}
+      <div class="alert {{category}} alert-dismissible fade show" role="alert">
+         {{message}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+
+        <input type='hidden' name='composition-csrf-token' value='{{csrf_token}}' />
+        <div class="row mb-1">
+          <label for="inputText" class="col-sm-2 col-form-label">Title</label>
+          <div class="col-sm-10">
+            <input required="" name='composition-title' type="text" class="form-control" value="{{blog.title}}">
+          </div>
+        </div>
+
+        <div class="row mb-1">
+          <label for="inputText" class="col-sm-2 col-form-label">Description</label>
+          <div class="col-sm-10">
+            <input required="" name="composition-description" type="text" class="form-control" value="{{blog.description}}">
+          </div>
+        </div>
+
+
+        <div class="row mb-1">
+          <label for="inputText" class="col-sm-2 col-form-label">Image</label>
+          <div class="col-sm-10">
+            <input required="" name="composition-image" type="text" class="form-control" value={{blog.image.name}}>
+          </div>
+        </div>
+
+        <div class="row mb-1">
+          <label class="col-sm-2 col-form-label">Categories</label>
+          <div class="col-sm-10">
+            <select required="" class="form-select" name='composition-category'aria-label="Select categories for your blog post">
+              {% for category in categories %}
+              <option value="{{category.name}}" {% if category == blog.category %} selected {% endif %}>{{category.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="row mb-1">
+          <label class="col-sm-2 col-form-label">Tags</label>
+          <div class="col-sm-10">
+            <select required="" class="form-select" name='composition-tags' multiple aria-label="Select tags for your blog post">
+              {% for tag in tags %}
+              <option value="{{tag.name}}" {% if tag in blog.tags %} selected {% endif %}>{{tag.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="my-quill-editor-full" id='composition-editor'>
+        {{blog.content  | safe}}
+        </div>
+
+        <div class='d-grid gap-2 mt-3'>
+          <button class='btn btn-primary' name='composition-submit'>Update </button>
+        </div>
+
+        <!-- Small Modal -->
+        <div class="modal fade" id="smallModal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-body"></div>
+          </div>
+        </div>
+        </div><!-- End Small Modal-->
+      </div>
+    </div>
+  </main>
+
+       
+
+
+  <button type="button" class="btn btn-primary collapse" data-bs-toggle="modal" data-bs-target="#smallModal" id='modal-launcher'></button>
+
+ <script src="{{url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src='{{url_for("static", filename="vendor/tinymce/tinymce.min.js")}}'></script>
+<script src='{{url_for("dynamic_js", filename="update.js")}}'></script>
+</body>
+</html>
+
