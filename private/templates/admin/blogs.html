@@ -11,18 +11,18 @@
             <th scope="col">Title</th>
             <th scope="col">Description</th>
             <th scope="col">Reads</th>
-            <th scope="col">Creation</th>
-            <th scope="col">Last Update</th>
+            <th scope="col">Category</th>
+            <th scope="col">Modified</th>
           </tr>
         </thead>
         <tbody>
         	{% for blog in blogs %}
           <tr>
             <th scope="row">{{blog.id}}</th>
-            <td>Link</td>
+            <td><a href='{{client_host}}/{{blog.category.name}}/{{blog.title}}.html'> {{blog.title}} </a></td>
             <td>{{blog.description}}</td>
             <td>{{blog.reads}}</td>
-            <td>{{blog.creation_date.strftime('%d/%m/%y')}}</td>
+            <td>{{blog.category.name}}</td>
             <td>{{blog.updated_date.strftime('%d/%m/%y')}}</td>
             <td><a href='{{url_for("update",blog_id=blog.id)}}'>Update</a></td>
           </tr>

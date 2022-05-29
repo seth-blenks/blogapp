@@ -13,8 +13,6 @@ from flask_wtf import csrf
 import logging
 
 
-
-
 logger = logging.getLogger('gunicorn.error')
 logger.info('This application is running on debug mode ')
 
