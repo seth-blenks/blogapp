@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask import current_app
 from datetime import datetime
 from enum import Enum
+import bleach
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 import logging 
 
@@ -226,6 +227,26 @@ class BlogPost(sql.Model):
 	image = sql.relationship('Image', backref=sql.backref('blogs'))
 	user = sql.relationship('User', backref=sql.backref('blogs'))
 	reactions = sql.relationship('Like', backref=sql.backref('blog'), lazy='dynamic')
+
+	@staticmethod
+	def on_changed_content(target, value, old_value, initiator):
+		allowed_tags = ['li','ul','ol','table','td','tr','th','a','href','h1','h2','h3','h4','h5','em','b','br','strong', 'pre','code',
+		'thead','tbody']
+		allowed_attributes = {
+		'a': ['href','class', 'style'],
+		'p': ['class', 'style'],
+		'td': ['class', 'style'],
+		'h1': ['class', 'style'],
+		'pre': ['class', 'style'],
+		'table': ['class','style','border'],
+		'tr': ['style', 'class'],
+		'td': ['style','class'],
+		}
+
+		clean_content = bleach.linkify(bleach.clean(value, strip=True, tags=allowed_tags, attributes=allowed_attributes))
+		return clean_content
+
+sql.event.listen(BlogPost.content, 'set', BlogPost.on_changed_content, retval=True)
 
 
 class Image(sql.Model):
