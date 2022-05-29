@@ -5,7 +5,7 @@ from datetime import datetime
 import psycopg2
 from uuid import uuid4
 
-conn = psycopg2.connect('dbname=testsecury user=privateuser password=private host=localhost port=5432')
+conn = psycopg2.connect('dbname=secury user=privateuser password=private host=localhost port=5432')
 cursor = conn.cursor()
 fake = Faker()
 

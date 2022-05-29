@@ -18,11 +18,6 @@ def client_context():
 	admin_id = Role.query.filter_by(name = 'admin').first()
 	return {'me': User.query.filter_by(role_id = admin_id.id).first()}
 
-@client.route('/')
-def homepage():
-	return render_template('index.html')
-
-
 
 @client.route('/login/alternate', methods=['POST'])
 def login_alternate():
@@ -44,15 +39,7 @@ def login_alternate():
 
 	return 'failed', 401
 
-@client.route('/portfolio')
-def portfolio():
-	return render_template('portfolio.html')
-
-@client.route('/services')
-def services():
-	return render_template('services.html')
-
-@client.route('/blogs/')
+@client.route('/')
 def blog():
 	page = request.args.get('page', 1, type = int)
 	pagination = BlogPost.query.order_by(BlogPost.creation_date.desc()).paginate(page, 10, error_out = False)
@@ -100,7 +87,7 @@ def login():
 					if _next:
 						return redirect(_next)
 
-					return redirect(url_for('homepage'))
+					return redirect(url_for('blog'))
 			flash('Login Failed')
 			return redirect(url_for('login'))
 
@@ -128,7 +115,7 @@ def register():
 					if not _user.has_password():
 						return redirect(url_for('set_password'))
 
-					return redirect(url_for('homepage'))
+					return redirect(url_for('blog'))
 				else:
 					_user = User(username = idinfo['name'], email = useremail)
 					_user.authenticated = True
@@ -149,7 +136,7 @@ def register():
 def logout():
 	session['google-login'] = False
 	logout_user()
-	return redirect(url_for('homepage'))
+	return redirect(url_for('blog'))
 
 
 
@@ -229,7 +216,9 @@ def comment():
 				sql.session.commit()
 				
 				post = BlogPost.query.get(int(post_id))
-				comments = [{'admin': current_user.is_admin(),'comment-id': comment.id,  'user-id': current_user.id, 'comment-user-id': comment.user.id,'image': comment.user.image_url,'username': comment.user.username,'comment': comment.comment,'date': comment.date.strftime('%d/%m/%y')} for comment in post.comments.all()]
+				comments = [{'admin': current_user.is_admin(),'comment-id': comment.id,  'user-id': current_user.id,
+				'comment-user-id': comment.user.id,'image': comment.user.image_url,'username': comment.user.username,
+				'comment': comment.comment,'date': comment.date.strftime('%A, %d %B %Y @%X')} for comment in post.comments.all()]
 				return jsonify(comments)
 		
 		abort(401)
@@ -244,7 +233,7 @@ def comment():
 		  'comment-user-id': comment.user.id,
 		  'image': comment.user.image_url,'username': comment.user.username,
 		  'comment': comment.comment,
-		'date': comment.date.strftime('%d/%m/%y')}
+		'date': comment.date.strftime('%A, %d %B %Y @%X')}
 		
 		comments.append(data)
 
@@ -428,7 +417,7 @@ def set_password():
 			if _next:
 				return redirect(_next)
 
-			return redirect(url_for('homepage'))
+			return redirect(url_for('blog'))
 
 	return render_template('set-password.html', csrf_token = gen_csrf())
 

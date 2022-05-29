@@ -344,10 +344,6 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		response = self.client.post(url_for('mark_all_notifications'))
 		self.assertTrue(response.status_code == 200)
 
-	def test_resubmission_of_otp(self):
-		self.login()
-		response = self.client.put(url_for('otp'))
-		self.assertTrue(response.get_json() == 'Authentication token resent to database')
 
 
 class EmailTest(unittest.TestCase):

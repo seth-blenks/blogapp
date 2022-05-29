@@ -55,11 +55,16 @@ function display_comments(data){
                   <div class="d-flex">
                     <div class="comment-img"><img src="${data[i]['image']}" alt=""></div>
                     <div>
-                      <h5><a href=""></a>${data[i]['username']}<a href="#" class="reply"><i class="bi bi-reply-fill"></i> Reply</a></h5>
+                      <h5>${data[i]['username']}</h5>
                       <time datetime="${data[i]['date']}">${data[i]['date']}</time>
                       <p>
                         ${data[i]['comment']}
-                        <button data-comment-id='${data[i]['comment-id']}' class='comment-delete-button btn btn-small btn-secondary mr-2 ${(data[i]['comment-user-id'] == data[i]['user-id']) ||  data[i]['admin'] ? 'admin' : 'collapse'}'>Delete</button>
+                        <div class="filter">
+				                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical text-muted"></i></a>
+				                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+				                    <li><a data-comment-id='${data[i]['comment-id']}' class='comment-delete-button dropdown-item mr-2 ${(data[i]['comment-user-id'] == data[i]['user-id']) ||  data[i]['admin'] ? 'admin' : 'collapse'}'>Delete</a></li>
+				                   </ul>
+				                </div>
                       </p>
                     </div>
                   </div>

@@ -10,7 +10,7 @@ class Basic:
 	GOOGLE_CLIENT_ID = os.environ['GOOGLE_CLIENT_ID']
 	GOOGLE_CLIENT_SECRET = os.environ['GOOGLE_CLIENT_SECRET']
 	GOOGLE_ANALYTICS_PROPERTY_ID = os.environ['GOOGLE_ANALYTICS_PROPERTY_ID']
-	CLIENT_SERVER_HOST = 'http://www.localhost.com'
+	CLIENT_SERVER_HOST = 'http://www.sethcodes.com'
 
 	
 	
@@ -51,7 +51,7 @@ class Testing_Client(Development):
 
 
 class Production(Basic):
-	SQLALCHEMY_DATABASE_URI = os.environ['P_DATABASE_URI']
+	SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URI']
 	SECRET_KEY = os.environ['SECRET_KEY']
 	SERVER_NAME = 'www.seth-seth.xyz'
 
