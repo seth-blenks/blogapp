@@ -7,16 +7,6 @@
   {% from 'macro.html' import header,links,footer,scripts, meta with context %}
   {{meta()}}
   {{links()}}
-
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-TS5K4PCDJZ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-TS5K4PCDJZ');
-</script>
 </head>
 
 <body>
@@ -66,7 +56,7 @@
               </div>
 
               <h2 class="entry-title">
-                <a itemprop='name' href="{{url_for('blog_details',title=blog.title)}}">{{blog.title}}</a>
+                <a itemprop='name' href="{{url_for('blog_details',title=blog.title, category=blog.category.name)}}">{{blog.title}}</a>
               </h2>
 
               <div class="entry-meta">
@@ -83,7 +73,7 @@
                   {{blog.description}}
                 </p>
                 <div class="read-more">
-                  <a href="{{url_for('blog_details',title=blog.title)}}">Read More</a>
+                  <a href="{{url_for('blog_details',title=blog.title, category=blog.category.name)}}">Read More</a>
                 </div>
               </div>
 
@@ -134,7 +124,7 @@
                   {% if other.id != blog.id %}
                     <div class="post-item clearfix">
                       <img src="/static/images/{{other.image.name}}" alt="">
-                      <h4><a href="{{url_for('blog_details',title=other.title)}}">{{other.title}}</a></h4>
+                      <h4><a href="{{url_for('blog_details',title=other.title, category = other.category.name)}}">{{other.title}}</a></h4>
                       <time datetime="{{other.updated_date.strftime('%y-%m-%d')}}">{{other.updated_date.strftime('%w %B %Y')}}</time>
                     </div>
                   {% endif %}

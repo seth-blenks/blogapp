@@ -4,6 +4,8 @@ let tag_select = document.querySelector('#tags-select')
 let tag_submit = document.querySelector('#tags-submit')
 let message = document.querySelector('.modal .modal-body')
 let modal_launcher = document.querySelector('#modal-launcher')
+let tag_delete_buttons = document.querySelectorAll('.tag-delete-button')
+let category_delete_buttons = document.querySelectorAll('.category-delete-button')
 
 tag_submit.addEventListener('click',function(){
 	let csrf = tag_csrf_token.value
@@ -26,4 +28,37 @@ tag_submit.addEventListener('click',function(){
 	}
 	
 
+})
+
+
+tag_delete_buttons.forEach(button => {
+	button.addEventListener('click', function(){
+		let form = new FormData()
+		form.append('csrf-token', "{{csrf_token}}")
+		form.append('name', button.getAttribute('data-tag-name'))
+		form.append('category', false)
+		fetch('{{url_for("tags")}}', {
+			'method': 'DELETE',
+			'body': form
+		}).then( response => response.json()).then( data => {
+			message.innerText = data
+			modal_launcher.click();
+		})
+	})
+})
+
+category_delete_buttons.forEach(button => {
+	button.addEventListener('click', function(){
+		let form = new FormData()
+		form.append('csrf-token', "{{csrf_token}}")
+		form.append('name', button.getAttribute('data-category-name'))
+		form.append('category', true)
+		fetch('{{url_for("tags")}}', {
+			'method': 'DELETE',
+			'body': form
+		}).then( response => response.json()).then( data => {
+			message.innerText = data
+			modal_launcher.click();
+		})
+	})
 })

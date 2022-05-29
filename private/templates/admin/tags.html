@@ -5,11 +5,17 @@
 			<div class='p-2 col-8'>
 				<h3>Tags</h3>
 				{% for tag in tags %}
-				<span class='badge border-secondary border-1 text-secondary'>{{tag.name}}</span>
+				<div class='text-secondary flow'>
+					<span>{{tag.name}}</span>
+					<i data-tag-name="{{tag.name}}" class='bi bi-file-excel tag-delete-button'></i>
+				</div>
 				{% endfor %}
 				<h3> Categories</h3>
 				{% for category in categories %}
-				<span class='badge border-secondary border-1 text-primary'>{{category.name}}</span>
+				<div class='text-muted flow'>
+					<span>{{category.name}}</span>
+					<i data-category-name="{{category.name}}" class='bi bi-file-excel category-delete-button'></i>
+				</div>
 				{% endfor %}
 			</div>
 			<div class='col-4'>
@@ -26,7 +32,7 @@
 </div>
 
 <!-- Small Modal -->
-        <div class="modal fade" id="smallModal" tabindex="-1">
+      <div class="modal fade" id="smallModal" tabindex="-1">
         <div class="modal-dialog modal-sm">
           <div class="modal-content">
             <div class="modal-body"></div>

@@ -500,7 +500,7 @@ def update():
 
 	return render_template('admin/update.html', blog=blog, categories = Category.query.all(), csrf_token = gen_csrf(), tags = Tag.query.all())
 
-@administrator.route('/tags', methods = ['GET','POST'])
+@administrator.route('/tags', methods = ['GET','POST', 'DELETE'])
 @login_required
 @admin_required
 def tags():
@@ -523,6 +523,32 @@ def tags():
 				sql.session.add(Tag(name = name))
 				sql.session.commit()
 				message['message'] = 'Tag uploaded to database'
+
+	elif request.method == 'DELETE':
+		csrf_token = request.form.get('csrf-token')
+		category = request.form.get('category')
+		name = request.form.get('name')
+		if category == 'true':
+			logger.info(f'Attempting to delete category {name}')
+			cat = Category.query.filter_by(name = name).first()
+			if cat:
+				if len(cat.blogpost) == 0:
+					sql.session.delete(cat)
+					sql.session.commit()
+					return jsonify('Category deleted from database'), 200
+				else:
+					return jsonify('Some blogs still depend on this category. Ensure you change the category of these blogs before deleting. Thanks'), 200
+			else:
+				return jsonify('No such category'), 409
+		else:
+			logger.info(f'Delete tag {name}')
+			tag = Tag.query.filter_by(name = name).first()
+			if tag:
+				sql.session.delete(tag)
+				sql.session.commit()
+				return jsonify('Tag deleted from the database')
+			else:
+				return jsonify('No such tag in database'), 409
 
 		return jsonify(message)
 

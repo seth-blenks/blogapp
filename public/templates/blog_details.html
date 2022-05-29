@@ -13,18 +13,6 @@
  <meta name='og:image' content="/static/images/{{blog.image.name}}">
   {{links()}}
   <link href='/static/css/prism.css' rel='stylesheet' />
-
-
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-TS5K4PCDJZ"></script>
-
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-TS5K4PCDJZ');
-</script>
 </head>
 
 <body>
@@ -130,11 +118,11 @@
               </div>
               <div class='share-meta'>
                 <li class="d-flex align-items-center">
-                    <div class="fb-share-button encode-link" data-href="{{url_for('blog_details',title=blog.title, _external=True)}}" data-layout="button_count" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+                    <div class="fb-share-button encode-link" data-href="{{url_for('blog_details',title=blog.title, category=blog.category.name, _external=True)}}" data-layout="button_count" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
                   </li>
                   <li class='d-flex align-items-center'>
                     <script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
-                    <script type="IN/Share" data-url="{{url_for('blog_details',title=blog.title, _external=True)}}"></script>
+                    <script type="IN/Share" data-url="{{url_for('blog_details',title=blog.title, category=blog.category.name, _external=True)}}"></script>
                   </li>
                   <li class='d-flex align-items-center'>
                     <a class="twitter-share-button encode-link"
@@ -235,7 +223,7 @@
                   {% if other.id != blog.id %}
                     <div class="post-item clearfix">
                       <img src="/static/images/{{other.image.name}}" alt="">
-                      <h4><a href="{{url_for('blog_details',title=other.title)}}">{{other.title}}</a></h4>
+                      <h4><a href="{{url_for('blog_details',title=other.title, category = blog.category.name)}}">{{other.title}}</a></h4>
                       <time datetime="{{blog.updated_date.strftime('%y-%m-%d')}}">{{blog.updated_date.strftime('%A %d %B %Y')}}</time>
                     </div>
                   {% endif %}
@@ -286,7 +274,7 @@
             let content = `<ul class='my-1'>`
             data.forEach( _data => {
               content += `<li>
-              <p><a href='/blogs/${_data['title']}.html' > ${_data['title']} </a></br>
+              <p><a href='/${_data['category']}/${_data['title']}.html' > ${_data['title']} </a></br>
                ${_data['description']}</p>
               </li>`
             });

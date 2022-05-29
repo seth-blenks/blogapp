@@ -52,14 +52,28 @@ def blog():
 	}
 	return render_template('blogs.html', types= types, pagination = pagination, articles = articles, others = others, categories = Category.query.all(), tags = Tag.query.all())
 
-@client.route('/blogs/<title>.html')
-def blog_details(title):
-	blog = BlogPost.query.filter_by(title = title).first()
-	if not blog:
+@client.route('/<category>/')
+def blog_category(category):
+	cat = Category.query.filter_by(name = category).first()
+	page = request.args.get('page', 1, type=int)
+	if not cat:
 		abort(404)
 
-	others = BlogPost.query.filter_by(category = blog.category).paginate(1,5, error_out= False).items
+	pag = BlogPost.query.filter(BlogPost.category == cat).paginate(page, 10, error_out = False)
+	return render_template('blogs.html',articles = pag.items, cat = cat, pagination = pag, csrf_token = gen_csrf())
 
+
+
+
+
+@client.route('/<category>/<title>.html')
+def blog_details(category, title):
+	blog = BlogPost.query.filter_by(title = title).first()
+	cat = Category.query.filter_by(name = category).first()
+	if not (blog  and cat):
+		abort(404)
+
+	others = BlogPost.query.filter(BlogPost.category == cat).paginate(1,5, error_out= False).items
 	return render_template('blog_details.html', blog = blog, others = others, categories = Category.query.all(), tags = Tag.query.all(), csrf_token = gen_csrf())
 
 @client.route('/login', methods=['GET','POST'])
@@ -145,10 +159,9 @@ def search():
 	#updated on input field
 	if request.method == 'POST':
 		query = request.form.get('q')
-		articles = [{'title': article[0],'description': article[1]} for article in BlogPost.query.session.connection().execute(f''' 
-		select title, description, ts_rank_cd(search, query) as rank
-		from blogpost, plainto_tsquery('{query}') as query
-		where query @@ search
+		articles = [{'title': article[0],'description': article[1], 'category': article[2]} for article in BlogPost.query.session.connection().execute(f''' 
+		select blogpost.title as title, blogpost.description as description, category.name as category, ts_rank_cd(search, query) as rank
+		from blogpost inner join category on (blogpost.category_id = category.id), plainto_tsquery('{query}') as query where query @@ search
 		order by rank desc;
 		''').fetchall()]
 
