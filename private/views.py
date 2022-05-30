@@ -523,6 +523,7 @@ def tags():
 				sql.session.commit()
 				message['message'] = 'Tag uploaded to database'
 
+
 	elif request.method == 'DELETE':
 		csrf_token = request.form.get('csrf-token')
 		category = request.form.get('category')
@@ -536,7 +537,7 @@ def tags():
 					sql.session.commit()
 					return jsonify('Category deleted from database'), 200
 				else:
-					return jsonify('Some blogs still depend on this category. Ensure you change the category of these blogs before deleting. Thanks'), 200
+					return jsonify('Some blogs still depend on this category. Ensure you change the category of these blogs before deleting. Thanks'), 409
 			else:
 				return jsonify('No such category'), 409
 		else:

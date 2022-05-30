@@ -33,6 +33,7 @@ tag_submit.addEventListener('click',function(){
 
 tag_delete_buttons.forEach(button => {
 	button.addEventListener('click', function(){
+		let _widget = this;
 		let form = new FormData()
 		form.append('csrf-token', "{{csrf_token}}")
 		form.append('name', button.getAttribute('data-tag-name'))
@@ -43,12 +44,14 @@ tag_delete_buttons.forEach(button => {
 		}).then( response => response.json()).then( data => {
 			message.innerText = data
 			modal_launcher.click();
+			_widget.parentElement.classList.add('bounceOutAnimation');
 		})
 	})
 })
 
 category_delete_buttons.forEach(button => {
 	button.addEventListener('click', function(){
+		let _widget = this;
 		let form = new FormData()
 		form.append('csrf-token', "{{csrf_token}}")
 		form.append('name', button.getAttribute('data-category-name'))
@@ -56,9 +59,19 @@ category_delete_buttons.forEach(button => {
 		fetch('{{url_for("tags")}}', {
 			'method': 'DELETE',
 			'body': form
-		}).then( response => response.json()).then( data => {
-			message.innerText = data
-			modal_launcher.click();
+		}).then( response => {
+			if(response.status == 200){
+				response.json().then( data => {
+					message.innerText = data
+					modal_launcher.click();
+					_widget.parentElement.classList.add('bounceOutAnimation');
+				})
+			}else{
+				response.json().then( data => {
+					message.innerText = data
+					modal_launcher.click();
+				})
+			}
 		})
 	})
 })

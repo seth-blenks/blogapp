@@ -140,6 +140,19 @@ class CLIENT_APPLICATION_TEST_CASE(unittest.TestCase):
 			})
 		self.assertTrue(response.get_json() == 'Click on the link provided in the email sent to your email address to reset your password. Thanks')
 
+	def test_homepage(self):
+		response = self.client.get(url_for('blog'))
+		self.assertTrue(response.status_code == 200)
+
+	def test_category_view(self):
+		response = self.client.get(url_for('blog_category', category = Category.query.get(1).name))
+		self.assertTrue(response.status_code == 200)
+
+	def test_view_blog(self):
+		blog = BlogPost.query.get(1)
+		response = self.client.get(url_for('blog_details', category = blog.category.name, title = blog.title))
+		self.assertTrue(response.statu_code == 200)
+
 
 if __name__ == '__main__':
     unittest.main()
