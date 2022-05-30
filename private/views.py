@@ -38,6 +38,7 @@ def homepage():
 
 
 
+
 @administrator.route('/notifications')
 @login_required
 @admin_required

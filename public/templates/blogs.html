@@ -12,6 +12,8 @@
 <body>
   <style>
     
+
+    
     .my-image{
       width: 100%;
     }
@@ -37,6 +39,14 @@
   display: flex;
   flex-wrap: wrap;
 }
+
+.blog .blog-pagination{
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  border-bottom: 0.5px solid #ccc;
+  border-top: 0.5px solid #ccc;
+}
   </style>
 
   {{header()}}
@@ -52,8 +62,8 @@
           <h2>Blog</h2>
           <ol>
             <li><a href="/">Home</a></li>
-            {% if blog %}
-            <li>{{blog.category.name}}</li>
+            {% if cat %}
+            <li>{{cat.name}}</li>
             {% endif %}
           </ol>
         </div>
