@@ -34,9 +34,9 @@ def homepage():
 	'mailserver': current_app.config['MAIL_EMAIL_SERVER']
 	}
 
-
-
 	return render_template('admin/index.html', data = data)
+
+
 
 @administrator.route('/notifications')
 @login_required

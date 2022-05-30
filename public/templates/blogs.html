@@ -11,6 +11,7 @@
 
 <body>
   <style>
+    
     .my-image{
       width: 100%;
     }
@@ -18,6 +19,24 @@
     .disabled{
       pointer-events: none;
     }
+.entries{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.blog .item-box .entry{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.blog .entry .entry-title{
+  font-size: 0.9rem;
+}
+
+.blog .entry .entry-meta{
+  display: flex;
+  flex-wrap: wrap;
+}
   </style>
 
   {{header()}}
@@ -32,8 +51,10 @@
         <div class="d-flex justify-content-between align-items-center">
           <h2>Blog</h2>
           <ol>
-            <li><a href="index.html">Home</a></li>
-            <li>Blog</li>
+            <li><a href="/">Home</a></li>
+            {% if blog %}
+            <li>{{blog.category.name}}</li>
+            {% endif %}
           </ol>
         </div>
 
@@ -42,44 +63,47 @@
 
     <!-- ======= Blog Section ======= -->
     <section id="blog" class="blog">
-      <div class="container" data-aos="fade-up">
+      <div class="container-fluid" data-aos="fade-up">
 
         <div class="row">
-
-          <div class="col-lg-8 entries">
+          <div class="entries">
+            
             {% for blog in articles %}
+            <div class='item-box col-12 col-lg-4 col-md-6 '>
             <article itemscope itemtype='https://schema.org/BlogPosting' class="entry">
+              <div>
+                <div class="entry-img">
+                  <div class='collapse' itemprop='image'>/static/images/{{blog.image.name}}</div>
+                  <img  src="/static/images/{{blog.image.name}}" alt="" class="my-image">
+                </div>
 
-              <div class="entry-img">
-                <div class='collapse' itemprop='image'>/static/images/{{blog.image.name}}</div>
-                <img  src="/static/images/{{blog.image.name}}" alt="" class="my-image">
-              </div>
+                <h2 class="entry-title">
+                  <a itemprop='name' href="{{url_for('blog_details',title=blog.title, category=blog.category.name)}}">{{blog.title}}</a>
+                </h2>
 
-              <h2 class="entry-title">
-                <a itemprop='name' href="{{url_for('blog_details',title=blog.title, category=blog.category.name)}}">{{blog.title}}</a>
-              </h2>
+                <div class="entry-meta">
+                  <ul>
+                    <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="blog-single.html">{{blog.user.username}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="blog-single.html">{{blog.comments.count()}}</a></li>
+                    <li class="d-flex align-items-center"><i class="bi bi-heart"></i> <a href="blog-single.html">{{blog.reads}}</a></li>
+                  </ul>
+                  <div><i class="bi bi-clock"></i><time datetime="{{blog.updated_date.strftime('%y-%m-%d')}}">{{blog.updated_date.strftime('%A %d %B %Y')}}</time></div>
+                </div>
 
-              <div class="entry-meta">
-                <div><i class="bi bi-clock"></i> <a href="blog-single.html"><time datetime="{{blog.updated_date.strftime('%y-%m-%d')}}">{{blog.updated_date.strftime('%A %d %B %Y')}}</time></div>
-                <ul>
-                  <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="blog-single.html">{{blog.user.username}}</a></li>
-                  <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="blog-single.html">{{blog.comments.count()}}</a></li>
-                  <li class="d-flex align-items-center"><i class="bi bi-heart"></i> <a href="blog-single.html">{{blog.reads}}</a></li>
-                </ul>
-              </div>
-
-              <div class="entry-content">
-                <p itemprop='description'>
-                  {{blog.description}}
-                </p>
-                <div class="read-more">
-                  <a href="{{url_for('blog_details',title=blog.title, category=blog.category.name)}}">Read More</a>
+                <div class="entry-content">
+                  <p itemprop='description'>
+                    {{blog.description}}
+                  </p>
+                  <div class="read-more">
+                    <a href="{{url_for('blog_details',title=blog.title, category=blog.category.name)}}">Read More</a>
+                  </div>
                 </div>
               </div>
 
             </article><!-- End blog entry -->
-
+            </div>
             {% endfor %}
+
             <div class='container-fluid'>
             <div class="blog-pagination">
               <ul class="justify-content-center">
@@ -87,7 +111,7 @@
                 {% if not page %}
                 <li class="disabled"><a href='#'>...</a></li>
                 {% else %}
-                <li class="{% if pagination.page == page %} active {% endif %}"><a href="?{% if types['q'] %}q={{types['q']}}&type={{types['type']}}{% endif %}&page={{page}}">{{page}}</a></li>
+                <li class="{% if pagination.page == page %} active {% endif %}"><a href="?page={{page + 1}}">{{page}}</a></li>
                 {% endif %}
                 {% endfor %}
               </ul>
@@ -96,7 +120,7 @@
 
           </div><!-- End blog entries list -->
 
-          <div class="col-lg-4">
+          <div class="col-lg-6">
 
             <div class="sidebar">
 
@@ -107,30 +131,6 @@
                 </div>
                 <div id='search-result'></div>
               </div><!-- End sidebar search form-->
-
-              <h3 class="sidebar-title">Categories</h3>
-              <div class="sidebar-item categories">
-                <ul>
-                  {% for category in categories %}
-                  <li><a href="/search?q={{category.name}}&type=category">{{category.name}} </a></li>
-                  {% endfor %}
-                </ul>
-              </div><!-- End sidebar categories-->
-
-              <h3 class="sidebar-title">Recent Posts</h3>
-              <div class="sidebar-item recent-posts">
-                {% for other in others %}
-                {% if blog %}
-                  {% if other.id != blog.id %}
-                    <div class="post-item clearfix">
-                      <img src="/static/images/{{other.image.name}}" alt="">
-                      <h4><a href="{{url_for('blog_details',title=other.title, category = other.category.name)}}">{{other.title}}</a></h4>
-                      <time datetime="{{other.updated_date.strftime('%y-%m-%d')}}">{{other.updated_date.strftime('%w %B %Y')}}</time>
-                    </div>
-                  {% endif %}
-                {% endif %}
-                {% endfor %}
-              </div><!-- End sidebar recent posts-->
 
               <h3 class="sidebar-title">Tags</h3>
               <div class="sidebar-item tags">

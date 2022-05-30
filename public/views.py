@@ -16,7 +16,9 @@ logger = getLogger('gunicorn.error')
 @client.context_processor
 def client_context():
 	admin_id = Role.query.filter_by(name = 'admin').first()
-	return {'me': User.query.filter_by(role_id = admin_id.id).first()}
+	return {'me': User.query.filter_by(role_id = admin_id.id).first(),
+	'categories':Category.query.all(),
+	'tags': Tag.query.all() }
 
 
 @client.route('/login/alternate', methods=['POST'])
@@ -43,14 +45,11 @@ def login_alternate():
 def blog():
 	page = request.args.get('page', 1, type = int)
 	pagination = BlogPost.query.order_by(BlogPost.creation_date.desc()).paginate(page, 10, error_out = False)
-	articles = pagination.items[0:5]
-	others = pagination.items[5:]
+	articles = pagination.items
+	return render_template('blogs.html', pagination = pagination, articles = articles, others = others,)
 
-	types = {
-	'type': None,
-	'q': None
-	}
-	return render_template('blogs.html', types= types, pagination = pagination, articles = articles, others = others, categories = Category.query.all(), tags = Tag.query.all())
+
+
 
 @client.route('/<category>/')
 def blog_category(category):
