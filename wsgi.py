@@ -1,10 +1,10 @@
-from public import create_app as public
-from private import create_app as private
+from blog import create_app as public
+from admin import create_app as private
 from database import UserDetails, sql, User, Role, Category, Tag
 import os
 
-public_server = public('Cdevelopment')
-private_server = private('Adevelopment')
+public_server = public('development')
+private_server = private('development')
 
 @private_server.cli.command('setup')
 def setup():
@@ -22,8 +22,8 @@ def setup():
 	sql.session.commit()
 
 def run_app(environ, start_response):
-	host = environ['HTTP_HOST']
-	if host == 'admin.sethcodes.com':
+	path = environ['PATH_INFO']
+	if path.startswith('/admin/'):
 		return private_server(environ, start_response)
 	else:
 		return public_server(environ, start_response)

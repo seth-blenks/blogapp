@@ -1,0 +1,54 @@
+<div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Blog Posts</h5>
+      <p>This is the display of all the blogs in your database<a href="https://github.com/fiduswriter/Simple-DataTables" target="_blank">Simple DataTables</a> library. Just add <code>.datatable</code> class name to any table you wish to conver to a datatable</p>
+
+      <!-- Table with stripped rows -->
+      <table class="table datatable">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Reads</th>
+            <th scope="col">Category</th>
+            <th scope="col">Modified</th>
+          </tr>
+        </thead>
+        <tbody>
+        	{% for blog in blogs %}
+          <tr>
+            <th scope="row">{{blog.id}}</th>
+            <td><a href='{{client_host}}/{{blog.category.name}}/{{blog.title}}.html'> {{blog.title}} </a></td>
+            <td>{{blog.description}}</td>
+            <td>{{blog.reads}}</td>
+            <td>{{blog.category.name}}</td>
+            <td>{{blog.updated_date.strftime('%d/%m/%y')}}</td>
+            <td><a href='{{url_for("administrator.update",blog_id=blog.id)}}'>Update</a></td>
+          </tr>
+          	{% endfor %}
+        </tbody>
+      </table>
+      <!-- End Table with stripped rows -->
+
+      <nav aria-label="...">
+	        <ul class="pagination justify-content-center">
+	          <li class="page-item blog-pagination-link {% if not pagination.has_prev %} disabled {% endif %}">
+	            <a class="page-link"  tabindex="-1" aria-disabled="true">Previous</a>
+	          </li>
+	          {% for page in pagination.iter_pages() %}
+	          {% if not page %}
+	                <li class="page-item disabled blog-pagination-link" ><a class="page-link">...</a></li>
+	          {% else %}
+	          <li class="blog-pagination-link page-item {% if pagination.page == page %} active {% endif %}" aria-current="page" data-page='{{page}}'>
+	            <a class="page-link" >{{page}}</a>
+	          </li>
+	          {% endif %}
+	          {% endfor %}
+	          <li class="page-item {% if not pagination.has_next %} disabled {% endif %}">
+	            <a class="page-link blog-pagination-link">Next</a>
+	          </li>
+	        </ul>
+	      </nav>
+    </div>
+  </div>

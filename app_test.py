@@ -40,7 +40,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		self.private_app_context.pop()
 
 	def test_homepage(self):
-		response = self.client.get(url_for('homepage'))
+		response = self.client.get(url_for('administrator.homepage'))
 		self.assertTrue(response.status_code == 200)
 
 	def test_admin_login(self):
@@ -53,14 +53,14 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		self.assertTrue(response.status_code == 302)
 
 	def admin_login(self):
-		response = self.client.post(url_for('login'), data={
+		response = self.client.post(url_for('administrator.login'), data={
 			'csrf-token': 'token',
 			'email': 'chembio451@gmail.com',
 			'password': 'seth'
 			} )
 
 	def test_post_image(self):
-		response = self.client.post(url_for('upload_image'),data={
+		response = self.client.post(url_for('administrator.upload_image'),data={
 			'images': open('/home/seth/Pictures/banner.jpg','rb'),
 			'csrf-token': 'token'},
 			content_type='multipart/form-data'
@@ -69,7 +69,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 
 	def upload_image(self):
 		self.admin_login()
-		self.client.post(url_for('upload_image'),data={
+		self.client.post(url_for('administrator.upload_image'),data={
 			'images': open('/home/seth/Pictures/IMG_20210722_124148_3~2.jpg','rb'),
 			'csrf-token': 'token'},
 			content_type='multipart/form-data'
@@ -82,7 +82,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		category_1 = Category.query.get(1)
 		tag = Tag.query.get(1)
 
-		response = self.client.post(url_for('upload_article'),data={
+		response = self.client.post(url_for('administrator.upload_article'),data={
 			'csrf-token': 'token',
 			'title': 'This is a test article title',
 			'description': 'This is a test description',
@@ -97,7 +97,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 
 		self.upload_blog()
 		blog_post_2 = BlogPost.query.get(2)
-		response = self.client.post(url_for('upload_article'), data = {
+		response = self.client.post(url_for('administrator.upload_article'), data = {
 			'csrf-token': 'token',
 			'title': blog_post_2.title,
 			'description': 'This is a test description',
@@ -110,7 +110,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		message = response.get_json()['message']
 		self.assertTrue(message == 'Title already in use')
 
-		response = self.client.post(url_for('upload_article'), data = {
+		response = self.client.post(url_for('administrator.upload_article'), data = {
 			'csrf-token': 'token',
 			'title': uuid4().hex + str(time.time()),
 			'description': 'This is a test description',
@@ -123,7 +123,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		message = response.get_json()['message']
 		self.assertTrue(message == 'No Category specified or category is not found in database')
 
-		response = self.client.post(url_for('upload_article'), data = {
+		response = self.client.post(url_for('administrator.upload_article'), data = {
 			'csrf-token': 'token',
 			'title': uuid4().hex + str(time.time()),
 			'description': 'This is a test description',
@@ -140,7 +140,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 
 	def upload_blog(self):
 		#uploading image to server
-		self.client.post(url_for('upload_image'),data={
+		self.client.post(url_for('administrator.upload_image'),data={
 			'images': open('/home/seth/Pictures/IMG_20210722_124148_3~2.jpg','rb'),
 			'csrf-token': 'token'},
 			content_type='multipart/form-data'
@@ -150,7 +150,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		category_1 = Category.query.get(1)
 		tag = Tag.query.get(1)
 
-		response = self.client.post(url_for('upload_article'),data={
+		response = self.client.post(url_for('administrator.upload_article'),data={
 			'csrf-token': 'token',
 			'title': uuid4().hex,
 			'description': 'This is a test description',
@@ -167,7 +167,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		blog_post = BlogPost.query.get(1)
 		image_one = Image.query.get(1)
 
-		response = self.client.post(url_for('update', blog_id = blog_post.id),data={
+		response = self.client.post(url_for('administrator.update', blog_id = blog_post.id),data={
 			'csrf-token': 'token',
 			'title': 'This is the updated title',
 			'description': 'This is a test description',
@@ -182,7 +182,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 
 		self.upload_blog()
 		blog_post_2 = BlogPost.query.get(2)
-		response = self.client.post(url_for('update', blog_id = blog_post.id),data={
+		response = self.client.post(url_for('administrator.update', blog_id = blog_post.id),data={
 			'csrf-token': 'token',
 			'title': blog_post_2.title,
 			'description': 'This is a test description',
@@ -195,7 +195,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		message = response.get_json()['message']
 		self.assertTrue(message == 'Title already in use')
 
-		response = self.client.post(url_for('update', blog_id = blog_post.id),data={
+		response = self.client.post(url_for('administrator.update', blog_id = blog_post.id),data={
 			'csrf-token': 'token',
 			'title': uuid4().hex + str(time.time()),
 			'description': 'This is a test description',
@@ -208,7 +208,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		message = response.get_json()['message']
 		self.assertTrue(message == 'No Category specified or category is not found in database')
 
-		response = self.client.post(url_for('update', blog_id = blog_post.id),data={
+		response = self.client.post(url_for('administrator.update', blog_id = blog_post.id),data={
 			'csrf-token': 'token',
 			'title': uuid4().hex + str(time.time()),
 			'description': 'This is a test description',
@@ -228,7 +228,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 
 
 	def test_upload_tag(self):
-		response = self.client.post(url_for('tags'), data = {
+		response = self.client.post(url_for('administrator.tags'), data = {
 			'csrf-token': 'token',
 			'select': 'Tag',
 			'name': 'Fellow Tag'
@@ -236,7 +236,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		self.assertTrue(response.status_code == 200)
 
 	def test_upload_category(self):
-		response = self.client.post(url_for('tags'), data = {
+		response = self.client.post(url_for('administrator.tags'), data = {
 			'csrf-token': 'token',
 			'select': 'Category',
 			'name': 'Fellow Category'
@@ -246,7 +246,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 	## failed operations
 
 	def test_admin_login_fail(self):
-		response = self.client.post(url_for('login'), data = {
+		response = self.client.post(url_for('administrator.login'), data = {
 			'csrf-token': 'token',
 			'email': 'faile@fail.com',
 			'password': 'failed'
@@ -263,7 +263,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		sql.session.add(new_user)
 		sql.session.commit()
 
-		response = self.client.post(url_for('users'), json = {
+		response = self.client.post(url_for('administrator.users'), json = {
 			'restrict-ids': [new_user.id,],
 			'csrf-token': 'token'
 			}, content_type='application/json')
@@ -272,7 +272,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		message = response.get_json()
 		self.assertTrue(message == 'Users update successfully')
 
-		response = self.client.post(url_for('users'), json = {
+		response = self.client.post(url_for('administrator.users'), json = {
 			'unrestrict-ids': [new_user.id,],
 			'csrf-token': 'token'
 			}, content_type = 'application/json')
@@ -285,7 +285,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		self.upload_image()
 		self.upload_image()
 
-		response = self.client.delete(url_for('images'), data = {
+		response = self.client.delete(url_for('administrator.images'), data = {
 			'image-id': 2,
 			'csrf-token': 'token'
 			})
@@ -295,7 +295,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 
 	def test_update_admin_profile_information(self):
 		self.admin_login()
-		response = self.client.post(url_for('update_user_profile'), data={
+		response = self.client.post(url_for('administrator.update_user_profile'), data={
 			'csrf-token': 'token',
 			'fullname': 'administrator',
 			'about': 'this is the about',
@@ -313,7 +313,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		message = response.get_json()
 		self.assertTrue(message['message'] == 'User profile information updated successfully')
 
-		response = self.client.post(url_for('update_user_profile'), data={
+		response = self.client.post(url_for('administrator.update_user_profile'), data={
 			'csrf-token': 'token',
 			'fullname': 'administrator',
 			'about': 'this is the about',
@@ -331,7 +331,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 
 
 	def test_email_composition_submission(self):
-		response = self.client.post(url_for('compose_email'), data = {
+		response = self.client.post(url_for('administrator.compose_email'), data = {
 			'csrf-token': 'token',
 			'to': 'sethdad224@gmail.com',
 			'subject': 'The new email',
@@ -341,7 +341,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 
 
 	def test_mark_all_notification_as_read(self):
-		response = self.client.post(url_for('mark_all_notifications'))
+		response = self.client.post(url_for('administrator.mark_all_notifications'))
 		self.assertTrue(response.status_code == 200)
 
 

@@ -1,0 +1,62 @@
+<div class='card'id='image-display' >
+	<div class='card-body'>
+		<input type='hidden' id='images-csrf' value='{{csrf_token}}' />
+		<div class='card-title'>Images</div>
+		<div class='row'>
+			{% for image in pagination.items %}
+			<div class='my-image col-2'>
+				<img class='images-copy-buttons' data-imageName="{{image.name}}" src='/static/images/{{image.name}}' />
+			</div>
+			{% endfor %}
+		</div>
+
+		
+		<nav aria-label="...">
+	        <ul class="pagination justify-content-center">
+	          <li class="page-item blog-pagination-link {% if not pagination.has_prev %} disabled {% endif %}">
+	            <a class="page-link"  tabindex="-1" aria-disabled="true">Previous</a>
+	          </li>
+	          {% for page in pagination.iter_pages() %}
+	          {% if not page %}
+	                <li class="page-item disabled blog-pagination-link" ><a class="page-link">...</a></li>
+	          {% else %}
+	          <li class="blog-pagination-link page-item {% if pagination.page == page %} active {% endif %}" aria-current="page" data-page='{{page}}'>
+	            <a class="page-link" >{{page}}</a>
+	          </li>
+	          {% endif %}
+	          {% endfor %}
+	          <li class="page-item {% if not pagination.has_next %} disabled {% endif %}">
+	            <a class="page-link blog-pagination-link">Next</a>
+	          </li>
+	        </ul>
+	      </nav>
+	</div>
+</div>
+
+
+<style>
+		#image-display .my-image{
+    display: flex;
+		flex-direction: column;
+		position: relative;
+		height: 150px;
+		margin: 10px;
+	}
+
+#image-display .my-image img{
+	height: 100%;
+	width: 100%;
+}
+
+
+#image-display .my-image:hover{
+	display: block;
+  border-color: grey;
+	border-width: 5px;
+	border-style: solid;
+	transition: all 0.5s ease-in;
+}
+
+
+
+</style>

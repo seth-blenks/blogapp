@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  {% from 'macro.html' import header,links,footer,scripts, meta with context %}
+
+  <title>{{blog.title}}</title>
+  <meta name="og:title" content='{{blog.title}}'/>
+  <meta name="description" content="{{blog.description}}">
+ <meta name='og:description' content="{{blog.description}}">
+ <meta name='og:image' content="/static/images/{{blog.image.name}}">
+  {{links()}}
+  <link href='/static/css/prism.css' rel='stylesheet' />
+</head>
+
+<body>
+
+  <style>
+
+  .blog .blog-author img {
+  width: 100px;
+  height: 100px;
+}
+.twitter-share-button{
+  padding: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
+  color: #fff;
+  font-size: 0.7rem;
+  font-family: sans-serif;
+  font-weight: bold;
+  border-radius: 4px;
+  background-color: #1b60b9;
+  display: flex;
+  align-items: center;
+}
+
+.twitter-share-button span.ri-twitter-fill{
+  margin-right: 4px;
+}
+
+.share-meta{
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.share-meta li{
+  margin-left: 10px;
+}
+
+.comment {
+  position: relative;
+}
+
+.comment .filter {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+</style>
+
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v13.0&appId=124623813123139&autoLogAppEvents=1" nonce="8BfiaDu8"></script>
+
+  {{header()}}
+
+<main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section id="breadcrumbs" class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>{{blog.title}}</h2>
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li><a href="/{{blog.category.name}}/">{{blog.category.name}}</a></li>
+            <li>{{blog.title}}</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <!-- ======= Blog Single Section ======= -->
+    <section id="blog" class="blog">
+      <div class="container" data-aos="fade-up">
+
+        <div class="row">
+
+          <div class="col-lg-8 entries">
+
+            <article class="entry entry-single">
+
+              <div class="entry-img">
+                <img src="/static/images/{{blog.image.name}}" alt="" class="img-fluid">
+              </div>
+
+              <h2 class="entry-title">
+                <a href="#">{{blog.title}}</a>
+              </h2>
+
+              <div class="entry-meta">
+                <ul>
+                  <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="#">{{blog.user.username}}</a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="#"><time datetime="{{blog.updated_date.strftime('%y-%m-%d')}}">{{blog.updated_date.strftime('%A %d %B %Y')}}</time></a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="#">{{blog.comments.count()}}</a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-heart" id='reaction-button'></i> <a href="#">{{blog.reactions.count()}}</a></li>
+                  
+                  
+
+                </ul>
+              </div>
+              <div class='share-meta'>
+                <li class="d-flex align-items-center">
+                    <div class="fb-share-button encode-link" data-href="{{url_for('client.blog_details',title=blog.title, category=blog.category.name, _external=True)}}" data-layout="button_count" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+                  </li>
+                  <li class='d-flex align-items-center'>
+                    <script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+                    <script type="IN/Share" data-url="{{url_for('client.blog_details',title=blog.title, category=blog.category.name, _external=True)}}"></script>
+                  </li>
+                  <li class='d-flex align-items-center'>
+                    <a class="twitter-share-button encode-link"
+                      href="https://twitter.com/intent/tweet?text={{blog.title}}">
+                      <span class='ri-twitter-fill'></span>
+                    <span>Tweet</span></a>
+                  </li>
+                </div>
+
+              <div class="entry-content">
+                {{blog.content | safe}}
+              </div>
+
+              <div class="entry-footer">
+                <i class="bi bi-folder"></i>
+                <ul class="cats">
+      
+                  <li><a href="/search?q={{blog.category.name}}&type=category">{{blog.category.name}}</a></li>
+                 
+                </ul>
+
+                <i class="bi bi-tags"></i>
+                <ul class="tags">
+                  {% for tag in blog.tags %}
+                  <li><a href="/search?q={{tag.name}}&type=tag">{{tag.name}}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+
+            </article><!-- End blog entry -->
+
+            <div class="blog-author d-flex align-items-center">
+              <img src="{{blog.user.image_url}}" class="rounded-circle float-left" alt="">
+              <div>
+                <h4>{{blog.user.username}}</h4>
+                <div class="social-links">
+                  <a href="{{blog.user.userdetails.twitter_profile}}"><i class="bi bi-twitter"></i></a>
+                  <a href="{{blog.user.userdetails.facebook_profile}}"><i class="bi bi-facebook"></i></a>
+                  <a href="{{blog.user.userdetails.instagram_profile}}"><i class="biu bi-instagram"></i></a>
+                </div>
+                <p>
+                  A web developer with love for programming and studying. Always learning new things and never gets tired of trying out his power of innovative thinking. 
+                </p>
+              </div>
+            </div><!-- End blog author bio -->
+
+            <div class="blog-comments">
+
+              <div id='blog-comment-box'></div>
+
+              <input type='hidden' id='comment-post' value='{{blog.id}}' />
+              {% if current_user.is_authenticated and not current_user.restricted %}
+              <div class="reply-form">
+                <h4>Leave a Reply</h4>
+                <p>Your email address will not be published. Required fields are marked * </p>
+                <div id='comment-form'>
+                  <input type='hidden' id='comment-csrf' value='{{csrf_token}}' />
+                  <div class="row">
+                    <div class="col form-group">
+                      <textarea id="comment-message" class="form-control" placeholder="Your Comment*"></textarea>
+                    </div>
+                  </div>
+                  <button type="submit" id='comment-submit' class="btn btn-primary">Post Comment</button>
+
+                </div>
+
+              </div>
+              {% endif %}
+
+            </div><!-- End blog comments -->
+
+          </div><!-- End blog entries list -->
+
+          <div class="col-lg-4">
+
+            <div class="sidebar">
+
+              <h3 class="sidebar-title">Search</h3>
+              <div class="sidebar-item search-form">
+                <div id='search-input'>
+                  <input type="text" placeholder='search ...'>
+                </div>
+                <div id='search-result'></div>
+              </div><!-- End sidebar search form-->
+
+              <h3 class="sidebar-title">Categories</h3>
+              <div class="sidebar-item categories">
+                <ul>
+                  {% for category in categories %}
+                  <li><a href="/blogs?category={{category.name}}">{{category.name}} </a></li>
+                  {% endfor %}
+                </ul>
+              </div><!-- End sidebar categories-->
+
+              <h3 class="sidebar-title">Recent Posts</h3>
+              <div class="sidebar-item recent-posts">
+                {% for other in others %}
+                  {% if other.id != blog.id %}
+                    <div class="post-item clearfix">
+                      <img src="/static/images/{{other.image.name}}" alt="">
+                      <h4><a href="{{url_for('client.blog_details',title=other.title, category = blog.category.name)}}">{{other.title}}</a></h4>
+                      <time datetime="{{blog.updated_date.strftime('%y-%m-%d')}}">{{blog.updated_date.strftime('%A %d %B %Y')}}</time>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div><!-- End sidebar recent posts-->
+
+              <h3 class="sidebar-title">Tags</h3>
+              <div class="sidebar-item tags">
+                <ul>
+                  {% for tag in tags %}
+                  <li><a href="/search?q={{tag.name}}&type=tag">{{tag.name}}</a></li>
+                  {% endfor %}
+                </ul>
+              </div><!-- End sidebar tags-->
+
+            </div><!-- End sidebar -->
+
+          </div><!-- End blog sidebar -->
+
+        </div>
+
+      </div>
+    </section><!-- End Blog Single Section -->
+
+  </main><!-- End #main -->
+  {{footer()}}
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  {{scripts()}}
+  <script src='{{url_for("client.dynamic",section="js", filename="comment.js")}}' ></script>
+  <script>
+    let search_input = document.querySelector('#search-input input')
+    let search_button = document.querySelector('#search-input button')
+    let search_screen = document.querySelector('#search-result')
+
+
+    search_input.addEventListener('input', function(){
+      let value = search_input.value
+      if(value){
+        let formdata = new FormData()
+        formdata.append('q',value)
+        fetch('{{url_for("client.search")}}',{
+          'method': 'POST',
+          'body': formdata
+        }).then(response => response.json()).then(data => {
+            search_screen.innerHTML = ''
+            let content = `<ul class='my-1'>`
+            data.forEach( _data => {
+              content += `<li>
+              <p><a href='/${_data['category']}/${_data['title']}.html' > ${_data['title']} </a></br>
+               ${_data['description']}</p>
+              </li>`
+            });
+            content += `</ul>`
+
+            search_screen.innerHTML = content
+        })
+      }
+    })
+
+{% if current_user.is_authenticated %}
+let reaction_button = document.querySelector('#reaction-button')
+reaction_button.addEventListener('click', function(){
+  let formdata = new FormData()
+  formdata.append('user-id', {{current_user.id}})
+  formdata.append('csrf-token', comment_csrf.value)
+  formdata.append('blogpost-id', {{blog.id}})
+  fetch('/react',{
+    'method': 'POST',
+    'body': formdata
+  }).then( response => {
+    console.log(response.status)
+  })
+})
+
+{% endif %}
+  </script>
+
+  <script src='/static/js/prism.js'></script>
+  <script>
+    let links = document.querySelectorAll('.encode-link')
+    let linkedin = document.querySelector('script[type="IN/Share"]')
+    links.forEach( link => {
+      let data = link.getAttribute('data-href') || link.href
+      console.log(data);
+    })
+
+  </script>
+</body>
+
+</html>

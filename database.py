@@ -321,3 +321,14 @@ class Notification(sql.Model):
 		listener({'notification_type': self.notification_type,'message': self.message, 'name': self.name})
 
 
+
+
+### FLASK LOGIN SETUP ###
+from flask_login import LoginManager
+
+login_manager = LoginManager()
+@login_manager.user_loader
+def load_user(user_id):
+	return User.query.get(int(user_id))
+
+login_manager.anonymous_user = Visitor
