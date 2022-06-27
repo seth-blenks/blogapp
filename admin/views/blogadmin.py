@@ -197,7 +197,7 @@ def admin_notifications():
 @administrator.route('/users/all', methods = ['GET'])
 @admin_required
 def users_all():
-	users = [user.email for user in User.query.all() if not user.is_admin()]
+	users = [user.email for user in User.query.all()]
 	return jsonify(users)
 
 @administrator.route('/users', methods = ['GET','POST'])
@@ -590,7 +590,7 @@ def compose_email():
 		subject = request.form.get('subject')
 		content = request.form.get('content')
 
-		logger.info(f'Gotten request to send email with subject {subject} to users {",".join(to)}')
+		logger.info(f'{to} : {subject} : {content} : {csrf_token}')
 		if validate_csrf(csrf_token) and to and subject and content:
 			template = render_template('mail/message.html', content = content)
 			send_email(to, subject, template)
