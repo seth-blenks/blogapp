@@ -16,10 +16,10 @@ class Basic:
 	
 
 class Development(Basic):
-	MAIL_SERVER = 'www.sethcodes.com'
+	MAIL_SERVER = 'www.vandies.com'
 	MAIL_PORT = 25
 	MAIL_USERNAME = 'seth'
-	MAIL_EMAIL_SERVER = 'www.sethcodes.com'
+	MAIL_EMAIL_SERVER = 'www.vandies.com'
 	MAIL_DEFAULT_SENDER = 'seth'
 	MAIL_USE_SSL = False
 

@@ -4,7 +4,7 @@
 
 	<meta charset="utf-8">
 	<title>Sign Up: Folow us</title>
-  <link href='/assets/vendor/bootstrap/css/bootstrap.css' rel='stylesheet' />
+  <link href='{{url_for("static", filename="vendor/bootstrap/css/bootstrap.css")}}' rel='stylesheet' />
 </head>
 <body>
   <style>
@@ -74,8 +74,10 @@ form a{
   </style>
 	<main>
 	     <div class="col-11 col-lg-7 col-md-7">
-        <img src='/assets/img/logo.png' />
+        <img src='/static/images/logo.png' />
         <form role="form" method='post'>
+          <h2> Authentication OTP </h2>
+          <p> Please enter the authentication otp sent to your email address. </p>
           {% for message in get_flashed_messages() %}
             <div class="alert alert-info alert-dismissible fade show" role="alert">
              {{message}}

@@ -19,7 +19,7 @@ html, body{
   }
 
   input, form{
-    margin: 1rem 0px;
+    margin: 0.4rem 0px;
   }
 
 form{
@@ -74,8 +74,10 @@ form a{
   </style>
 	<main>
 	     <div class="col-11 col-lg-7 col-md-7">
-        <img src='{{url_for("static", filename="img/logo.png")}}' />
+        <img src='/static/images/logo.png' />
         <form role="form" method='post'>
+          <h2> Administrator Panel </h2>
+          <p><i class='bi bi-info'></i> Enter your administrator Email and Password to Continue.</p>
           {% for message in get_flashed_messages() %}
             <div class="alert alert-info alert-dismissible fade show" role="alert">
              {{message}}

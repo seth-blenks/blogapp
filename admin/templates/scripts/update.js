@@ -1,7 +1,6 @@
 let composition_csrf = document.querySelector('input[name="composition-csrf-token"]')
 let message = document.querySelector('.modal .modal-body')
-console.log(message)
-let modal_launcher = document.querySelector('#modal-launcher')
+let modal_launcher = new bootstrap.Modal('#smallModal')
 
 function image_upload_function(blobinfo, success, failure, progress){
     let xhr, formdata;
@@ -189,7 +188,7 @@ composition_submit_button.addEventListener('click',function(){
         message.innerText = 'Server Error!'
         }
    
-        modal_launcher.click();
+        modal_launcher.show();
 
       }
       )
@@ -198,16 +197,39 @@ composition_submit_button.addEventListener('click',function(){
 })
 
 delete_button.addEventListener('click',function(){
-  let content = prompt('Type \'Yes\' to delete this article')
-  if(content == 'Yes'){
-    let formdata = new FormData()
-    formdata.append('csrf-token', composition_csrf.value);
-    formdata.append('blogpost_id', blog_id)
-    fetch('{{url_for("administrator.blogpost_delete")}}', {
-      'method': 'POST',
-      'body': formdata
-    }).then(response => response.json()).then( data => {
-      console.log(data)
-    })
-  }
+  message.innerHTML = `
+  <div class='p-2'>
+    <h2> Blog Deletion </h2>
+    <p> Enter 'Yes' to continue with blog Deletion </p>
+    <div class='row justify-content-between'>
+      <input id='delete-input' class='col-9' type='text' placeholder='Enter Text'>
+      <button id='delete-confirm-button' class='btn btn-small btn-danger col-2 d-flex align-items-center justify-content-between'><i class='bi bi-times'></i> <span>Delete</span></button>
+    </div>
+  <div>
+  `
+
+  let delete_input = document.querySelector('#delete-input')
+  let delete_confirm_button = document.querySelector('#delete-confirm-button')
+  console.log(delete_input)
+  console.log(delete_confirm_button)
+
+  modal_launcher.show();
+
+  delete_confirm_button.addEventListener('click', function(){
+    let content = delete_input.value
+    if(content == 'Yes'){
+      let formdata = new FormData()
+      formdata.append('csrf-token', composition_csrf.value);
+      formdata.append('blogpost_id', blog_id)
+      fetch('{{url_for("administrator.blogpost_delete")}}', {
+        'method': 'POST',
+        'body': formdata
+      }).then(response => response.json()).then( data => {
+        modal_launcher.hide();
+        location.href = '{{url_for("administrator.homepage")}}';
+      })
+    }
+
+  })
+  
 })

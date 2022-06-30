@@ -48,7 +48,11 @@ function comment_delete(){
 }
 
 function display_comments(data){
-	let new_comment = `<h4 class="comments-count">${data.length} Comments</h4>`
+	let new_comment = ``
+	if(data.length == 1){new_comment += `<h4 class="comments-count">${data.length} Comment</h4>`}
+		else if(data.length == 0){ new_comment += `<h4 class="comments-count">Leave a Comment.</h4>`}
+	else{ new_comment += `<h4 class="comments-count">${data.length} Comments</h4>`
+		}
 			for(let i = 0; i < data.length; i++){
 				new_comment += `
 				<div id="comment_${data[i]['comment-id']}" class="comment">

@@ -110,7 +110,7 @@
                   <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="#">{{blog.user.username}}</a></li>
                   <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="#"><time datetime="{{blog.updated_date.strftime('%y-%m-%d')}}">{{blog.updated_date.strftime('%A %d %B %Y')}}</time></a></li>
                   <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="#">{{blog.comments.count()}}</a></li>
-                  <li class="d-flex align-items-center"><i class="bi bi-heart" id='reaction-button'></i> <a href="#">{{blog.reactions.count()}}</a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-eye" id='reaction-button'></i> <a href="#">{{blog.reactions.count()}}</a></li>
                   
                   
 
@@ -140,7 +140,7 @@
                 <i class="bi bi-folder"></i>
                 <ul class="cats">
       
-                  <li><a href="/search?q={{blog.category.name}}&type=category">{{blog.category.name}}</a></li>
+                  <li><a href="{{url_for('client.blog_category', category=blog.category.name)}}">{{blog.category.name}}</a></li>
                  
                 </ul>
 

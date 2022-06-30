@@ -22,7 +22,7 @@ class Development(Basic):
 	MAIL_USE_SSL = False
 	IMAP_USERNAME = 'seth'
 	IMAP_PORT = 143
-	IMAP_HOST = 'www.sethcodes.com'
+	IMAP_HOST = 'www.bloggy.com'
 	SQLALCHEMY_DATABASE_URI = 'postgresql://privateuser:private@localhost:5432/secury'
 
 

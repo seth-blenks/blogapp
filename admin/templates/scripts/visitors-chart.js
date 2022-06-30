@@ -53,7 +53,8 @@ let apexcharts = new ApexCharts(document.querySelector("#reportsChart"), apexcha
 apexcharts.render();
 
 function updateData(chart, series) {
-    chart.updateSeries(series)
+    chart.updateSeries([{name: "Desktops",
+                      data: [{'x': 'Monday', 'y': 10},{'x': 'Tuesday', 'y': 41},{x: 'wednesday', y: 50}, {x: 'Thursday', y: 73}, {x: 'Friday', y: 80}]}])
 }
 
 // apex time

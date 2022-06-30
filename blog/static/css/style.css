@@ -29,6 +29,7 @@ a:hover {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "Raleway", sans-serif;
+
 }
 
 /*--------------------------------------------------------------
@@ -1305,6 +1306,22 @@ section {
 }
 .blog .entry .entry-content p {
   line-height: 24px;
+  magin-bottom: 6px;
+}
+
+.blog .entry .entry-content h2 {
+  margin-top: 20px;
+  margin-bottom:  16px;
+}
+
+.blog .entry .entry-content h3 {
+  margin-top: 16px;
+  margin-bottom:  12px;
+}
+
+.blog .entry .entry-content h4 {
+  margin-top: 12px;
+  margin-bottom:  8px;
 }
 .blog .entry .entry-content .read-more {
   -moz-text-align-last: right;
@@ -1544,6 +1561,7 @@ section {
   padding: 30px;
   margin: 0 0 60px 20px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow-x: hidden;
 }
 .blog .sidebar .sidebar-title {
   font-size: 20px;

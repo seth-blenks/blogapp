@@ -45,9 +45,11 @@ def login_alternate():
 @client.route('/')
 def blog():
 	page = request.args.get('page', 1, type = int)
-	pagination = BlogPost.query.order_by(BlogPost.creation_date.desc()).paginate(page, 10, error_out = False)
+	pagination = BlogPost.query.order_by(BlogPost.creation_date.desc()).paginate(page, 12, error_out = False)
 	articles = pagination.items
 	return render_template('blogs.html', pagination = pagination, articles = articles)
+
+
 
 
 
@@ -59,10 +61,8 @@ def blog_category(category):
 	if not cat:
 		abort(404)
 
-	pag = BlogPost.query.filter(BlogPost.category == cat).paginate(page, 10, error_out = False)
+	pag = BlogPost.query.filter(BlogPost.category == cat).paginate(page, 12, error_out = False)
 	return render_template('blogs.html',articles = pag.items, cat = cat, pagination = pag, csrf_token = gen_csrf())
-
-
 
 
 @client.route('/<category>/<title>.html')
@@ -74,6 +74,10 @@ def blog_details(category, title):
 
 	others = BlogPost.query.filter(BlogPost.category == cat).paginate(1,5, error_out= False).items
 	return render_template('blog_details.html', blog = blog, others = others, categories = Category.query.all(), tags = Tag.query.all(), csrf_token = gen_csrf())
+
+
+
+
 
 @client.route('/login', methods=['GET','POST'])
 @password_required
@@ -150,6 +154,8 @@ def logout():
 	session['google-login'] = False
 	logout_user()
 	return redirect(url_for('client.blog'))
+
+
 
 
 
@@ -353,6 +359,7 @@ def start_password_reset():
 	return render_template('forgot-password-form.html', csrf_token = gen_csrf())
 
 
+
 @client.route('/submit_reset_password', methods=['POST'])
 def submit_reset_password():
 	token = request.form.get('user-token')
@@ -382,8 +389,6 @@ def submit_reset_password():
 				logger.info(f'Password reset for user {user.email} successful.')
 				flash('Your password has been reset. You can now login with your new password. Thanks')
 				return redirect(url_for('client.login'))
-
-
 
 		return jsonify('New Password Entry must match Confirm Password Entry'), 406
 	return jsonify('Password reset failed'), 400
