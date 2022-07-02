@@ -1,3 +1,6 @@
 __pycache__
 public/static/images/*
 !public/static/images/.gitkeep
+.env
+
+
