@@ -10,6 +10,11 @@ from datetime import datetime, timedelta, timezone
 from ..utils import admin_required
 from ..utils import validate_csrf, gen_csrf, save_image, delete_image, generateOTP
 from flask_wtf import csrf
+
+
+
+
+
 import logging
 
 
@@ -321,12 +326,12 @@ def upload_article():
 		description = request.form.get('description')
 		tags = request.form.getlist('tags')
 		category = request.form.get('category')
-		image = request.form.get('image')
+		image = request.files.get('image')
 		content = request.form.get('content')
 
 
 		logger.info('csrf_token: \t' + csrf_token)
-		logger.info('image: \t' + image)
+		logger.info('image: \t' + image.filename)
 		logger.info('category: \t' + category)
 		logger.info('title: \t' + title)
 		logger.info('description: \t' + description)
@@ -359,8 +364,8 @@ def upload_article():
 						})
 
 				new_blogpost_entry.category =  cat
-
-				_image = Image.query.filter_by(name = image).first()
+				image_name = save_image(image)
+				_image = Image.query.filter_by(name = image_name).first()
 				if not _image:
 					logger.info('Specified image not found in database')
 					return jsonify({
@@ -423,17 +428,17 @@ def update():
 		title = request.form.get('title')
 		description = request.form.get('description')
 		category = request.form.get('category')
-		image = request.form.get('image')
+		image = request.files.get('image')
 		content = request.form.get('content')
 		tags = request.form.getlist('tags')
 
 		logger.info('csrf_token: \t' + csrf_token)
-		logger.info('image: \t' + image)
 		logger.info('category: \t' + category)
 		logger.info('title: \t' + title)
 		logger.info('description: \t' + description)
 
-		if csrf_token and title and description and image and category and content and tags:
+
+		if csrf_token and title and description and category and content and tags:
 			if validate_csrf(csrf_token):
 				logger.info('passed csrf validation')
 
@@ -448,6 +453,9 @@ def update():
 				blog.description = description.strip()
 				blog.content = content
 				
+
+
+
 				blog.tags.clear()
 				for tag in tags:
 					_tag = Tag.query.filter_by(name = tag).first()
@@ -465,14 +473,11 @@ def update():
 				blog.category = cat
 				
 				blog.updated_date = datetime.now()
-				_image = Image.query.filter_by(name = image).first()
-				if not _image:
-					logger.info('Specified image not found in database')
-					return jsonify({
-						'message': 'specified image is not found in database',
-						})
-					
-				blog.image = _image
+
+				if image:
+					delete_image(blog.image)
+					image_name = save_image(image)
+					blog.image = Image.query.filter_by(name = image_name).first()
 
 				sql.session.add(blog)
 				sql.session.commit()

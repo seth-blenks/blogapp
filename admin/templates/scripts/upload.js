@@ -144,21 +144,21 @@ let composition_title = document.querySelector('input[name="composition-title"]'
 let composition_description = document.querySelector('input[name="composition-description"]')
 let composition_content = document.querySelector('#composition-editor')
 let composition_image = document.querySelector('input[name="composition-image"]')
-
 let composition_category = document.querySelector('select[name="composition-category"]')
 let composition_tags = document.querySelector('select[name="composition-tags"]')
 let composition_submit_button = document.querySelector('button[name="composition-submit"]')
-let composition_select_image_button = document.querySelector('#composition-image-button')
 let image_selection_modal = new bootstrap.Modal('#image-selection-modal')
 
-
+composition_image.addEventListener('input', function(){
+  document.querySelector('label[for="composition-image"]').innerText = this.files[0].name
+})
 
 composition_submit_button.addEventListener('click',function(){
   console.log('uploading file to database')
   let title = composition_title.value
   let description = composition_description.value
   let content = tinymce.get('composition-editor').getContent()
-  let image = composition_image.value
+  let image = composition_image.files[0]
   let csrf = composition_csrf.value
   let category = composition_category.selectedOptions[0].value
 
@@ -199,36 +199,4 @@ composition_submit_button.addEventListener('click',function(){
 })// end of event listener function
 
 
-function get_images(image_names){
-  image_names.forEach( button => {
-        button.addEventListener('click', function(){
-          composition_image.value = button.getAttribute('data-imageName');
-          composition_select_image_button.innerText = button.getAttribute('data-imageName');
-          image_selection_modal.hide();
-        })
-      })
-}
 
-composition_select_image_button.addEventListener('click', function(){
-  image_selection_modal.show();
-    fetch('{{url_for("administrator.images_p")}}?page=' + 1).then( response => response.text()).then( data => {
-      document.querySelector('#image-selection-modal .modal-body').innerHTML = data
-      let image_names = document.querySelectorAll('.images-copy-buttons')
-      let page_navigation = document.querySelectorAll('.blog-pagination-link')
-      get_images(image_names)
-
-      page_navigation.forEach( item => {
-
-        item.addEventListener('click',function(){
-          let page_number = this.getAttribute('data-page')
-          fetch('{{url_for("administrator.images_p")}}?page=' + page_number).then( response => response.text()).then( data => {
-          console.log('clicked pagination button')
-          document.querySelector('#image-selection-modal .modal-body').innerHTML = data
-          image_names = document.querySelectorAll('.images-copy-buttons')
-          page_navigation = document.querySelectorAll('.blog-pagination-link')
-          get_images(image_names)
-      }) })
-      })// end of pagination control
-
-})
-})

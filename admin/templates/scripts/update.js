@@ -154,11 +154,11 @@ composition_submit_button.addEventListener('click',function(){
   let title = composition_title.value
   let description = composition_description.value
   let content = tinymce.get('composition-editor').getContent()
-  let image = composition_image.value
+  let image = composition_image.files[0]
   let csrf = composition_csrf.value
   let category = composition_category.selectedOptions[0].value
 
-  if(title && description && csrf && image && content  && category){
+  if(title && description && csrf && content  && category){
     let tags = [] 
     for (var i = composition_tags.selectedOptions.length - 1; i >= 0; i--) {
       tags.push(composition_tags.selectedOptions[i].value);
@@ -169,7 +169,11 @@ composition_submit_button.addEventListener('click',function(){
     formdata.append('description', description)
     formdata.append('content', content)
     formdata.append('csrf-token',csrf)
-    formdata.append('image', image)
+    if(image == null){
+      formdata.append('image', 'not-changed')
+    }else{
+      formdata.append('image', image)
+    }
     formdata.append('category', category)
     for (var i = tags.length - 1; i >= 0; i--) {
       formdata.append('tags',tags[i])
@@ -187,7 +191,7 @@ composition_submit_button.addEventListener('click',function(){
       else{
         message.innerText = 'Server Error!'
         }
-   
+
         modal_launcher.show();
 
       }
