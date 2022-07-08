@@ -1,11 +1,12 @@
 import unittest
-from private import create_app as private_app
-from public import create_app as public_app
+from admin import create_app as private_app
+from blog import create_app as public_app
 from database import User, Category, Role, Tag, sql, Image, BlogPost, Comment, UserDetails, Notification
 from flask import url_for
 from uuid import uuid4
 import time
 import os
+from bs4 import BeautifulSoup
 
 
 
@@ -14,7 +15,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 
 	@classmethod
 	def setUpClass(self):
-		self.private_app = private_app('admin_test')
+		self.private_app = private_app('testing')
 		self.private_app_context = self.private_app.app_context()
 		self.private_app_context.push()
 
@@ -32,19 +33,30 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		sql.session.add(admin_profile)
 		sql.session.commit()
 
-		self.client = self.private_app.test_client(use_cookies=True)
+		self.private_app_context.pop()
+
 
 	@classmethod
 	def tearDownClass(self):
 		sql.session.remove()
+
+	def setUp(self):
+		self.private_app_context.push()
+		self.client = self.private_app.test_client(use_cookies = True)
+
+	def tearDown(self):
 		self.private_app_context.pop()
 
+	def _content(self, response):
+		return BeautifulSoup(response.data.decode('utf8'), 'html.parser')
+
 	def test_homepage(self):
+		self.admin_login()
 		response = self.client.get(url_for('administrator.homepage'))
 		self.assertTrue(response.status_code == 200)
 
 	def test_admin_login(self):
-		response = self.client.post('/login', data={
+		response = self.client.post(url_for('administrator.login'), data={
 			'csrf-token': 'token',
 			'email': 'chembio451@gmail.com',
 			'password': 'seth'
@@ -53,32 +65,15 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		self.assertTrue(response.status_code == 302)
 
 	def admin_login(self):
-		response = self.client.post(url_for('administrator.login'), data={
+		response = self.client.post(url_for('administrator.alternate_login'), data={
 			'csrf-token': 'token',
 			'email': 'chembio451@gmail.com',
 			'password': 'seth'
 			} )
 
-	def test_post_image(self):
-		response = self.client.post(url_for('administrator.upload_image'),data={
-			'images': open('/home/seth/Pictures/banner.jpg','rb'),
-			'csrf-token': 'token'},
-			content_type='multipart/form-data'
-			)
-		self.assertTrue('Upload Success'.encode('utf8') in response.data)
-
-	def upload_image(self):
-		self.admin_login()
-		self.client.post(url_for('administrator.upload_image'),data={
-			'images': open('/home/seth/Pictures/IMG_20210722_124148_3~2.jpg','rb'),
-			'csrf-token': 'token'},
-			content_type='multipart/form-data'
-			)
-
+	
 	def test_post_blog(self):
-		self.upload_image()
-
-		image_one = Image.query.get(1)
+		self.admin_login()
 		category_1 = Category.query.get(1)
 		tag = Tag.query.get(1)
 
@@ -89,10 +84,10 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 			'tags': [tag.name for tag in Tag.query.all()],
 			'category': 'Computer',
 			'content': 'This is the test content',
-			'image': image_one.name
+			'image': open('/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png','rb')
 			},)
 
-		message = response.get_json()['message']
+		message = response.json['message']
 		self.assertTrue(message == 'Upload of article successful')
 
 		self.upload_blog()
@@ -104,10 +99,10 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 			'tags': [tag.name for tag in Tag.query.all()],
 			'category': 'Computer',
 			'content': 'This is the test content',
-			'image': image_one.name
+			'image': open('/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png','rb')
 			})
 
-		message = response.get_json()['message']
+		message = response.json['message']
 		self.assertTrue(message == 'Title already in use')
 
 		response = self.client.post(url_for('administrator.upload_article'), data = {
@@ -117,36 +112,14 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 			'tags': [tag.name for tag in Tag.query.all()],
 			'category': 'nonsence',
 			'content': 'This is the test content',
-			'image': image_one.name
+			'image': open('/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png','rb')
 			})
 
-		message = response.get_json()['message']
+		message = response.json['message']
 		self.assertTrue(message == 'No Category specified or category is not found in database')
 
-		response = self.client.post(url_for('administrator.upload_article'), data = {
-			'csrf-token': 'token',
-			'title': uuid4().hex + str(time.time()),
-			'description': 'This is a test description',
-			'tags': [tag.name for tag in Tag.query.all()],
-			'category': 'Computer',
-			'content': 'This is the test content',
-			'image': 'wrong image name'
-			})
-
-		message = response.get_json()['message']
-		self.assertTrue(message == 'specified image is not found in database')
-
-
-
 	def upload_blog(self):
-		#uploading image to server
-		self.client.post(url_for('administrator.upload_image'),data={
-			'images': open('/home/seth/Pictures/IMG_20210722_124148_3~2.jpg','rb'),
-			'csrf-token': 'token'},
-			content_type='multipart/form-data'
-			)
-
-		image_one = Image.query.get(1)
+		self.admin_login()		
 		category_1 = Category.query.get(1)
 		tag = Tag.query.get(1)
 
@@ -157,15 +130,15 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 			'tags': [tag.name for tag in Tag.query.all()],
 			'category': 'Computer',
 			'content': 'This is the test content',
-			'image': image_one.name
+			'image': open('/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png','rb')
 			},)
 
 	
 
 	def test_update_post_blog(self):
+		self.admin_login()
 		self.upload_blog()
 		blog_post = BlogPost.query.get(1)
-		image_one = Image.query.get(1)
 
 		response = self.client.post(url_for('administrator.update', blog_id = blog_post.id),data={
 			'csrf-token': 'token',
@@ -174,10 +147,10 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 			'tags': [tag.name for tag in Tag.query.all()],
 			'category': 'Computer',
 			'content': 'This is the test content',
-			'image': image_one.name
+			'image': open('/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png','rb')
 			})
 
-		message = response.get_json()['message']
+		message = response.json['message']
 		self.assertTrue(message == 'Update success')
 
 		self.upload_blog()
@@ -189,10 +162,10 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 			'tags': [tag.name for tag in Tag.query.all()],
 			'category': 'Computer',
 			'content': 'This is the test content',
-			'image': image_one.name
+			'image': open('/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png','rb')
 			})
 
-		message = response.get_json()['message']
+		message = response.json['message']
 		self.assertTrue(message == 'Title already in use')
 
 		response = self.client.post(url_for('administrator.update', blog_id = blog_post.id),data={
@@ -202,32 +175,15 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 			'tags': [tag.name for tag in Tag.query.all()],
 			'category': 'nonsence',
 			'content': 'This is the test content',
-			'image': image_one.name
+			'image': open('/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png','rb')
 			})
 
-		message = response.get_json()['message']
+		message = response.json['message']
 		self.assertTrue(message == 'No Category specified or category is not found in database')
-
-		response = self.client.post(url_for('administrator.update', blog_id = blog_post.id),data={
-			'csrf-token': 'token',
-			'title': uuid4().hex + str(time.time()),
-			'description': 'This is a test description',
-			'tags': [tag.name for tag in Tag.query.all()],
-			'category': 'Computer',
-			'content': 'This is the test content',
-			'image': 'not found in database'
-			})
-
-		message = response.get_json()['message']
-		self.assertTrue(message == 'specified image is not found in database')
-
-
-
-		
-
 
 
 	def test_upload_tag(self):
+		self.admin_login()
 		response = self.client.post(url_for('administrator.tags'), data = {
 			'csrf-token': 'token',
 			'select': 'Tag',
@@ -236,6 +192,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		self.assertTrue(response.status_code == 200)
 
 	def test_upload_category(self):
+		self.admin_login()
 		response = self.client.post(url_for('administrator.tags'), data = {
 			'csrf-token': 'token',
 			'select': 'Category',
@@ -280,18 +237,6 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		message = response.get_json()
 		self.assertTrue(message == 'Users update successfully')
 
-	def test_delete_image(self):
-		self.admin_login()
-		self.upload_image()
-		self.upload_image()
-
-		response = self.client.delete(url_for('administrator.images'), data = {
-			'image-id': 2,
-			'csrf-token': 'token'
-			})
-
-		message = response.get_json()
-		self.assertTrue(message['message'] == 'Image Deleted from database')
 
 	def test_update_admin_profile_information(self):
 		self.admin_login()
@@ -328,9 +273,8 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		self.assertTrue(message['message'] == 'All social media profile links must be set')
 
 	
-
-
 	def test_email_composition_submission(self):
+		self.admin_login()
 		response = self.client.post(url_for('administrator.compose_email'), data = {
 			'csrf-token': 'token',
 			'to': 'sethdad224@gmail.com',
@@ -341,15 +285,33 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 
 
 	def test_mark_all_notification_as_read(self):
+		self.admin_login()
 		response = self.client.post(url_for('administrator.mark_all_notifications'))
 		self.assertTrue(response.status_code == 200)
 
+	def test_password_reset(self):
+		response = self.client.get(url_for('administrator.start_password_reset'))
+		self.assertTrue(response.status_code == 200)
 
+		response = self.client.post(url_for('administrator.start_password_reset'), data = {
+			'email': 'chembio451@gmail.com'
+			})
+		self.assertTrue(response.json == 'Click on the link provided in the email sent to your email address to reset your password. Thanks')
 
-class EmailTest(unittest.TestCase):
-	def test_email(self):
-		print('testing the mail client')
-		self.assertTrue(True)
+		response = self.client.get(url_for('administrator.reset_password', token = input('Enter token: \t')))
+		self.assertTrue(response.status_code == 200)
+
+		response = self.client.post(url_for('administrator.reset_password'), data = {
+			'user-token': input('Enter user token: \t'),
+			'new-password': 'newpassword',
+			'confirm-password': 'confirmpassword',
+			'csrf-token': 'token'
+			}, follow_redirects = True)
+
+		content = self._content(response)
+		print(content.title.string)
+		self.assertTrue(content.title.string == 'Admin Login')
+
 
 
 

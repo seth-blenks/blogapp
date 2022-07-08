@@ -10,6 +10,7 @@ class Basic:
 	GOOGLE_CLIENT_ID = os.environ['GOOGLE_CLIENT_ID']
 	GOOGLE_CLIENT_SECRET = os.environ['GOOGLE_CLIENT_SECRET']
 	GOOGLE_ANALYTICS_PROPERTY_ID = os.environ['GOOGLE_ANALYTICS_PROPERTY_ID']
+	PERSONALTESTING = False
 
 	
 
@@ -26,11 +27,21 @@ class Development(Basic):
 	SQLALCHEMY_DATABASE_URI = 'postgresql://privateuser:private@localhost:5432/secury'
 
 
-class Testing:
+class Testing(Basic):
 	SQLALCHEMY_DATABASE_URI = 'postgresql://privateuser:private@localhost:5432/testsecury'
-	TESTING = True
+	PERSONALTESTING = True
 	WTF_CSRF_ENABLED = False
 	SERVER_NAME = 'admin.sethcodes.com'
+	IMAP_USERNAME = 'seth'
+	IMAP_PORT = 143
+	IMAP_HOST = 'www.vandies.com'
+	MAIL_SERVER = 'www.vandies.com'
+	MAIL_PORT = 25
+	MAIL_USERNAME = 'seth'
+	MAIL_EMAIL_SERVER = 'www.vandies.com'
+	MAIL_DEFAULT_SENDER = 'seth'
+	MAIL_USE_SSL = False
+	ADMIN_EMAIL = 'chembio451@gmail.com'
 
 
 class Production(Basic):

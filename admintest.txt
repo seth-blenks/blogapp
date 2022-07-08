@@ -1,0 +1,273 @@
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : start the send email operation with token b'eyJhbGciOiJIUzUxMiIsImlhdCI6MTY1NzI0MDM1NCwiZXhwIjoxNjU3MjQzOTU0fQ.eyJ1c2VyLWlkIjoxfQ.8Z7TeAf416FJ1zepCh_-kJ2G5KgVyGby4-p-E6XwmCEeu_1BwHTtwyZvzrxcXtbUP6kjgvAYKFb6oJ4BjdXDQQ'
+testtools - INFO : Starting application reset password flow
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : ['sethdad224@gmail.com'] : The new email : This is the content : token
+testtools - WARNING : This application is running in a test environment
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : start the send email operation with token b'eyJhbGciOiJIUzUxMiIsImlhdCI6MTY1NzI0MDQ1MywiZXhwIjoxNjU3MjQ0MDUzfQ.eyJ1c2VyLWlkIjoxfQ.c3aFqmGRDrOoq2HztCoDXs5Eptrfthuj6y7GWotS78Otci5xpJ0unAC0A8XZxPRo8IjnUGllxzBjZKwu_Bk1Vg'
+testtools - INFO : Starting application reset password flow
+testtools - INFO : User id generated from reset token: 1
+testtools - INFO : New-Password: newpassword
+testtools - INFO : Confirm-Password: confirmpassword
+testtools - INFO : CSRF-Token: token
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	This is a test article title
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Upload of article successful. Returning with status code 200
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	3da0b8e2a0c442f68c2604940de56c8a
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Upload of article successful. Returning with status code 200
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	3da0b8e2a0c442f68c2604940de56c8a
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Title already in use. Returning with 200 status code
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	nonsence
+testtools - INFO : title: 	e6282cc132de4f468b781de34429f2401657240486.654454
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : No Category selected for the upload. Returning with 200 status code
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : <User user@restrict.com restricted
+testtools - INFO : Users update successfully 
+testtools - INFO : <user user@restrict.com unrestricted
+testtools - INFO : Users update successfully 
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : User profile updated 
+testtools - WARNING : This application is running in a test environment
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	0258372a933f4f6f8f2815e2e1693adb
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Upload of article successful. Returning with status code 200
+testtools - INFO : csrf_token: 	token
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	This is the updated title
+testtools - INFO : description: 	This is a test description
+testtools - INFO : passed csrf validation
+testtools - INFO : passed used title validation
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	d8d2d92b4be84547b03266b6ed6bdb71
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Upload of article successful. Returning with status code 200
+testtools - INFO : csrf_token: 	token
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	3da0b8e2a0c442f68c2604940de56c8a
+testtools - INFO : description: 	This is a test description
+testtools - INFO : passed csrf validation
+testtools - INFO : csrf_token: 	token
+testtools - INFO : category: 	nonsence
+testtools - INFO : title: 	6748d28dc29c49ab90f2c3727c3269391657240488.6059172
+testtools - INFO : description: 	This is a test description
+testtools - INFO : passed csrf validation
+testtools - INFO : passed used title validation
+testtools - INFO : No Category specified or category is not found in database
+testtools - WARNING : This application is running in a test environment
+testtools - WARNING : This application is running in a test environment
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : ['sethdad224@gmail.com'] : The new email : This is the content : token
+testtools - WARNING : This application is running in a test environment
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : start the send email operation with token b'eyJhbGciOiJIUzUxMiIsImlhdCI6MTY1NzI0MDU0NiwiZXhwIjoxNjU3MjQ0MTQ2fQ.eyJ1c2VyLWlkIjoxfQ.prDDQKeaU6PjZKO0u5CGDyLOPu-C9_-LrEch4VPQQV2h1M2nN9fDGhKp4ZJBGojJcyfv7zDnhpeabitODu7-ZQ'
+testtools - INFO : Starting application reset password flow
+testtools - INFO : User id generated from reset token: 1
+testtools - INFO : New-Password: newpassword
+testtools - INFO : Confirm-Password: confirmpassword
+testtools - INFO : CSRF-Token: token
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	This is a test article title
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Upload of article successful. Returning with status code 200
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	0812e15fa9464815a8e9c9438319a781
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Upload of article successful. Returning with status code 200
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	0812e15fa9464815a8e9c9438319a781
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Title already in use. Returning with 200 status code
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	nonsence
+testtools - INFO : title: 	15066b2dff1943bdb5f4208c4dd4157f1657240551.078331
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : No Category selected for the upload. Returning with 200 status code
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : <User user@restrict.com restricted
+testtools - INFO : Users update successfully 
+testtools - INFO : <user user@restrict.com unrestricted
+testtools - INFO : Users update successfully 
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : User profile updated 
+testtools - WARNING : This application is running in a test environment
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	1d54e880f4e1449d892eac41cb33ff5b
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Upload of article successful. Returning with status code 200
+testtools - INFO : csrf_token: 	token
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	This is the updated title
+testtools - INFO : description: 	This is a test description
+testtools - INFO : passed csrf validation
+testtools - INFO : passed used title validation
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	94dfb7837e62443dbe81f89c558f606c
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Upload of article successful. Returning with status code 200
+testtools - INFO : csrf_token: 	token
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	0812e15fa9464815a8e9c9438319a781
+testtools - INFO : description: 	This is a test description
+testtools - INFO : passed csrf validation
+testtools - INFO : csrf_token: 	token
+testtools - INFO : category: 	nonsence
+testtools - INFO : title: 	c5ca0546f6f34a3ba6ff0d155e70b8041657240553.0505905
+testtools - INFO : description: 	This is a test description
+testtools - INFO : passed csrf validation
+testtools - INFO : passed used title validation
+testtools - INFO : No Category specified or category is not found in database
+testtools - WARNING : This application is running in a test environment
+testtools - WARNING : This application is running in a test environment
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : ['sethdad224@gmail.com'] : The new email : This is the content : token
+testtools - WARNING : This application is running in a test environment
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : start the send email operation with token b'eyJhbGciOiJIUzUxMiIsImlhdCI6MTY1NzI0MDU5NiwiZXhwIjoxNjU3MjQ0MTk2fQ.eyJ1c2VyLWlkIjoxfQ.fC34NmNKbWh1GUHr2VRY785faqFxnSb85n4Gb9YqcwySk91snYHZ7dVAvJObPoAvq4FAXaIEoiWRiNUrkqnq1Q'
+testtools - INFO : Starting application reset password flow
+testtools - INFO : User id generated from reset token: 1
+testtools - INFO : New-Password: newpassword
+testtools - INFO : Confirm-Password: confirmpassword
+testtools - INFO : CSRF-Token: token
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	This is a test article title
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Upload of article successful. Returning with status code 200
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	7e1a0671a9fe4390bae8212d670ec67f
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Upload of article successful. Returning with status code 200
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	7e1a0671a9fe4390bae8212d670ec67f
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Title already in use. Returning with 200 status code
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	nonsence
+testtools - INFO : title: 	6e77f037188c4fb2af90e6c588e1137d1657240600.3069775
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : No Category selected for the upload. Returning with 200 status code
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : <User user@restrict.com restricted
+testtools - INFO : Users update successfully 
+testtools - INFO : <user user@restrict.com unrestricted
+testtools - INFO : Users update successfully 
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : User profile updated 
+testtools - WARNING : This application is running in a test environment
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	e57eefe548594c9f9cd7514be78909c3
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Upload of article successful. Returning with status code 200
+testtools - INFO : csrf_token: 	token
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	This is the updated title
+testtools - INFO : description: 	This is a test description
+testtools - INFO : passed csrf validation
+testtools - INFO : passed used title validation
+testtools - WARNING : This application is running in a test environment
+testtools - INFO : csrf_token: 	token
+testtools - INFO : image: 	/home/seth/Pictures/Screenshot-from-2022-05-08-00-10-211657101601065597.png
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	97fade94b6e64a70a17e07a899097614
+testtools - INFO : description: 	This is a test description
+testtools - INFO : Yellow,Green,Pink,Red
+testtools - INFO : field present continuing ...
+testtools - INFO : Upload of article successful. Returning with status code 200
+testtools - INFO : csrf_token: 	token
+testtools - INFO : category: 	Computer
+testtools - INFO : title: 	7e1a0671a9fe4390bae8212d670ec67f
+testtools - INFO : description: 	This is a test description
+testtools - INFO : passed csrf validation
+testtools - INFO : csrf_token: 	token
+testtools - INFO : category: 	nonsence
+testtools - INFO : title: 	c8232e13875e4d7a83d006a1fba20dad1657240602.2750008
+testtools - INFO : description: 	This is a test description
+testtools - INFO : passed csrf validation
+testtools - INFO : passed used title validation
+testtools - INFO : No Category specified or category is not found in database
+testtools - WARNING : This application is running in a test environment
+testtools - WARNING : This application is running in a test environment

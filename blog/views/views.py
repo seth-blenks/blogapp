@@ -345,15 +345,14 @@ def reads():
 	return jsonify('failed'), 401
 
 ##################### PASSWORD RESET VIEWS ##################################
+##################### PASSWORD RESET VIEWS ##################################
 
 @client.route('/password/reset', methods=['GET','POST'])
 def start_password_reset():
 	if request.method == 'POST':
 		serializer = Serializer(current_app.config['SECRET_KEY'])
 		email = request.form.get('email')
-		csrf = request.form.get('csrf-token')
-
-		if email and validate_csrf(csrf):
+		if email:
 			user = User.query.filter_by(email = email).first()
 			if user:
 				token = serializer.dumps({'user-id': user.id})
@@ -362,91 +361,50 @@ def start_password_reset():
 		return jsonify('User Email not found in database')
 
 	return render_template('forgot-password-form.html', csrf_token = gen_csrf())
-
-
-
-@client.route('/submit_reset_password', methods=['POST'])
-def submit_reset_password():
-	token = request.form.get('user-token')
-	user_id = None
-	
-	try:
-		s = Serializer(current_app.config['SECRET_KEY'])
-		user_id = s.loads(token)
-		logger.info(f'User id generated from reset token: {user_id}')
-	except BadSignature:
-		return jsonify('Bad Signature'), 400
-
-	new_password = request.form.get('new-password')
-	confirm_password = request.form.get('confirm-password')
-	csrf = request.form.get('csrf-token')
-
-	logger.info(f'New-Password: {new_password}')
-	logger.info(f'Confirm-Password: {confirm_password}')
-	logger.info(f'CSRF-Token: {csrf}')
-	if user_id and new_password and confirm_password and validate_csrf(csrf):
-		if new_password == confirm_password:
-			user = User.query.get(int(user_id))
-			if user:
-				user.password = new_password
-				sql.session.add(user)
-				sql.session.commit()
-				logger.info(f'Password reset for user {user.email} successful.')
-				flash('Your password has been reset. You can now login with your new password. Thanks')
-				return redirect(url_for('client.login'))
-
-		return jsonify('New Password Entry must match Confirm Password Entry'), 406
-	return jsonify('Password reset failed'), 400
 	
 
+	
 
-@client.route('/reset_password')
+@client.route('/reset_password', methods=['GET','POST'])
 def reset_password():
-	logger.info('Starting application reset password flow')
-	authentication_token = request.args.get('token')
-	s = Serializer(current_app.config['SECRET_KEY'])
-
-	try:
-		user_id = s.loads(authentication_token.encode('utf8'))
-	except BadSignature:
-		logger.error('Signature Loading Failed ...')
-		return jsonify('Error!'), 400
-
-	logger.info('User id: ' + str(user_id['user-id']))
-	user = User.query.get(int(user_id['user-id']))
-	logger.info(f'Returning reset password form for user {user.email}')
-	if user:
-		password_serializer = Serializer(current_app.config['SECRET_KEY'])
-		user_verification_token = password_serializer.dumps(user.id).decode('utf8')
-		logger.info(f'the token for the update: {user_verification_token}')
-		return render_template('reset-password.html', token = user_verification_token, csrf_token = gen_csrf())
-	else:
-		abort(400)
-
-	
-
-@client.route('/set_password', methods=['GET','POST'])
-def set_password():
 	if request.method == 'POST':
-		password = request.form.get('password')
+		token = request.form.get('user-token')
+		user_id = None
+		
+		try:
+			s = Serializer(current_app.config['SECRET_KEY'])
+			user_id = s.loads(token)['user-id']
+			logger.info(f'User id generated from reset token: {user_id}')
+		except BadSignature:
+			return jsonify('Bad Signature'), 400
+
+		new_password = request.form.get('new-password')
 		confirm_password = request.form.get('confirm-password')
 		csrf = request.form.get('csrf-token')
 
-		if validate_csrf(csrf) and (password == confirm_password):
-			user = current_user._get_current_object()
-			user.password = password
-			sql.session.add(user)
-			sql.session.commit()
+		logger.info(f'New-Password: {new_password}')
+		logger.info(f'Confirm-Password: {confirm_password}')
+		logger.info(f'CSRF-Token: {csrf}')
+		if user_id and new_password and confirm_password and validate_csrf(csrf):
+			if new_password == confirm_password:
+				user = User.query.get(int(user_id))
+				if user:
+					user.password = new_password
+					sql.session.add(user)
+					sql.session.commit()
+					flash('Your password has been reset. You can now login with your new password. Thanks')
+					return redirect(url_for('client.login'))
 
-			flash('Password set for your account. Thanks')
-			_next = request.args.get('next')
-			if _next:
-				return redirect(_next)
 
-			return redirect(url_for('client.blog'))
+		flash('Password reset failed')
+		return redirect(url_for('client.login'))
 
-	return render_template('set-password.html', csrf_token = gen_csrf())
+	logger.info('Starting application reset password flow')
+	authentication_token = request.args.get('token')
+	if not authentication_token:
+		abort(400)
 
+	return render_template('reset-password.html', token = authentication_token, csrf_token = gen_csrf())
 
 @client.route('/dynamic/<section>/<filename>')
 def dynamic(section, filename):

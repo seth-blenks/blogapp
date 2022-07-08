@@ -32,7 +32,7 @@ def generateOTP() :
     return OTP
 
 def validate_csrf(csrf):
-	if current_app.config['TESTING']:
+	if current_app.config['PERSONALTESTING']:
 		return True
 		
 	try:

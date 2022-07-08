@@ -10,16 +10,13 @@ from datetime import datetime, timedelta, timezone
 from ..utils import admin_required
 from ..utils import validate_csrf, gen_csrf, save_image, delete_image, generateOTP
 from flask_wtf import csrf
-
-
-
+from testtools import testlogger
 
 
 import logging
 
-
-logger = logging.getLogger('gunicorn.error')
-logger.info('This application is running on debug mode ')
+#logger = logging.getLogger('gunicorn.error')
+logger = testlogger
 
 @administrator.context_processor
 def administator_context():
@@ -56,6 +53,27 @@ def user_profile():
 	return render_template('admin/user-profile.html', csrf_token = gen_csrf())
 
 
+@administrator.route('/alternate/login', methods=['POST'])
+def alternate_login():
+	if not current_app.config['PERSONALTESTING']:
+		abort(404)
+
+	logger.warning(f'This application is running in a test environment')
+
+	csrf_token = request.form.get('csrf-token')
+	email = request.form.get('email')
+	password = request.form.get('password')
+
+	if validate_csrf(csrf_token) and email and password:
+		user = User.query.filter_by(email = email).first()
+		if user and user.is_admin():
+			if user.check_password(password):
+				user.authenticated = True
+				sql.session.add(user)
+				sql.session.commit()
+				login_user(user)
+				return redirect(url_for('administrator.homepage'))
+
 @administrator.route('/login', methods=['POST','GET'])
 def login():
 	
@@ -82,13 +100,7 @@ def login():
 			user = User.query.filter_by(email = email).first()
 			if user and user.is_admin():
 				if user.check_password(password):
-					if current_app.testing:
-						user.authenticated = True
-						sql.session.add(user)
-						sql.session.commit()
-						login_user(user)
-						return redirect(url_for('administrator.homepage'))
-
+					
 					# use two factor authentication method for normal admin login
 					auth_otp = generateOTP()
 					session['auth-otp'] = auth_otp
@@ -167,36 +179,13 @@ def blogs():
 	pagination = BlogPost.query.order_by(BlogPost.creation_date.desc()).paginate(page, 50, error_out = False)
 	return render_template('admin/blogs.html', blogs = pagination.items, pagination = pagination)
 
-@administrator.route('/images', methods=['GET','DELETE'])
-@admin_required
-def images():
-	if request.method == 'DELETE':
-		csrf_token = request.form.get('csrf-token')
-		image_id = request.form.get('image-id')
-		image = Image.query.get(image_id)
-		if image:
-			if delete_image(image):
-				sql.session.delete(image)
-				sql.session.commit()
-				return jsonify({'message': 'Image Deleted from database'})
-		abort(400)
-	page = request.args.get('page',1,type=int)
-	pagination = Image.query.paginate(page, 30, error_out=False)
 
-	return render_template('admin/image.html', csrf_token = gen_csrf(),pagination = pagination )
 
-@administrator.route('/images/up/', methods=['GET','DELETE'])
-@admin_required
-def images_p():
-	page = request.args.get('page',1,type=int)
-	pagination = Image.query.paginate(page, 30, error_out=False)
-	return render_template('admin/image_p.html', csrf_token = gen_csrf(),pagination = pagination )
 
 	
 @administrator.route('/notifications', methods=['POST','GET'])
 @admin_required
 def admin_notifications():
-	
 	return render_template('admin/notifications.html')
 
 @administrator.route('/users/all', methods = ['GET'])
@@ -391,29 +380,6 @@ def upload_article():
 					}), 400
 
 	return render_template('admin/upload.html', categories = Category.query.all(), csrf_token = gen_csrf(), tags = Tag.query.all())
-
-@administrator.route('/upload/image',methods=['GET','POST'])
-@admin_required
-def upload_image():
-	if request.method == 'POST':
-		logger.info('image upload process started')
-		image_name = None
-		_images = request.files.getlist('images')
-		csrf_token = request.form.get('csrf-token')
-
-		logger.info(_images)
-		logger.info(csrf_token)
-		logger.info('=='*20)
-		if validate_csrf(csrf_token) and _images:
-			for _image in _images:
-				image_name = save_image(_image)
-				logger.debug(f'image with name {image_name} saved to database')
-			return jsonify({"message": "Upload Success","category":"alert-success",'location': f'{url_for("static",filename=f"images/{image_name}")}'})
-
-		abort(400)
-
-	return render_template('admin/image_upload.html',csrf_token = gen_csrf())
-
 
 @administrator.route('/update',methods=['GET','POST'])
 @admin_required
@@ -645,91 +611,55 @@ def start_password_reset():
 			user = User.query.filter_by(email = email).first()
 			if user:
 				token = serializer.dumps({'user-id': user.id})
+				logger.info(f'start the send email operation with token {token}')
 				send_email([user.email,], 'Reset User Password', render_template('mail/reset-password.html', link = url_for('administrator.reset_password', token = token, _external = True)))
+		
 				return jsonify('Click on the link provided in the email sent to your email address to reset your password. Thanks')
+		logger.warning(f'Email not found in database. No mail will be sent')
 		return jsonify('User Email not found in database')
 
 	return render_template('forgot-password-form.html', csrf_token = gen_csrf())
 	
 
-@administrator.route('/submit_reset_password', methods=['POST'])
-def submit_reset_password():
-	token = request.form.get('user-token')
-	user_id = None
 	
-	try:
-		s = Serializer(current_app.config['SECRET_KEY'])
-		user_id = s.loads(token)
-		logger.info(f'User id generated from reset token: {user_id}')
-	except BadSignature:
-		return jsonify('Bad Signature'), 400
 
-	new_password = request.form.get('new-password')
-	confirm_password = request.form.get('confirm-password')
-	csrf = request.form.get('csrf-token')
-
-	logger.info(f'New-Password: {new_password}')
-	logger.info(f'Confirm-Password: {confirm_password}')
-	logger.info(f'CSRF-Token: {csrf}')
-	if user_id and new_password and confirm_password and validate_csrf(csrf):
-		if new_password == confirm_password:
-			user = User.query.get(int(user_id))
-			if user:
-				user.password = new_password
-				sql.session.add(user)
-				sql.session.commit()
-				flash('Your password has been reset. You can now login with your new password. Thanks')
-				return redirect(url_for('administrator.login'))
-
-
-	flash('Password reset failed')
-	return redirect(url_for('administrator.login'))
-
-
-@administrator.route('/reset_password')
+@administrator.route('/reset_password', methods=['GET','POST'])
 def reset_password():
-	logger.info('Starting application reset password flow')
-	authentication_token = request.args.get('token')
-	s = Serializer(current_app.config['SECRET_KEY'])
-
-	try:
-		user_id = s.loads(authentication_token.encode('utf8'))
-	except BadSignature:
-		logger.error('Signature Loading Failed ...')
-		return jsonify('Error!'), 400
-
-	logger.info('User id: ' + str(user_id['user-id']))
-	user = User.query.get(int(user_id['user-id']))
-	logger.info(f'Returning reset password form for user {user.email}')
-	if user:
-		password_serializer = Serializer(current_app.config['SECRET_KEY'])
-		user_verification_token = password_serializer.dumps(user.id).decode('utf8')
-		logger.info(f'the token for the update: {user_verification_token}')
-		return render_template('reset-password.html', token = user_verification_token, csrf_token = gen_csrf())
-	else:
-		abort(400)
-
-	
-
-@administrator.route('/set_password', methods=['GET','POST'])
-def set_password():
 	if request.method == 'POST':
-		password = request.form.get('password')
+		token = request.form.get('user-token')
+		user_id = None
+		
+		try:
+			s = Serializer(current_app.config['SECRET_KEY'])
+			user_id = s.loads(token)['user-id']
+			logger.info(f'User id generated from reset token: {user_id}')
+		except BadSignature:
+			return jsonify('Bad Signature'), 400
+
+		new_password = request.form.get('new-password')
 		confirm_password = request.form.get('confirm-password')
 		csrf = request.form.get('csrf-token')
 
-		if validate_csrf(csrf) and (password == confirm_password):
-			user = current_user._get_current_object()
-			user.password = password
-			sql.session.add(user)
-			sql.session.commit()
+		logger.info(f'New-Password: {new_password}')
+		logger.info(f'Confirm-Password: {confirm_password}')
+		logger.info(f'CSRF-Token: {csrf}')
+		if user_id and new_password and confirm_password and validate_csrf(csrf):
+			if new_password == confirm_password:
+				user = User.query.get(int(user_id))
+				if user:
+					user.password = new_password
+					sql.session.add(user)
+					sql.session.commit()
+					flash('Your password has been reset. You can now login with your new password. Thanks')
+					return redirect(url_for('administrator.login'))
 
-			flash('Password set for your account. Thanks')
-			_next = request.args.get('next')
-			if _next:
-				return redirect(_next)
 
-			return redirect(url_for('administrator.homepage'))
+		flash('Password reset failed')
+		return redirect(url_for('administrator.login'))
 
-	return render_template('set-password.html', csrf_token = gen_csrf())
+	logger.info('Starting application reset password flow')
+	authentication_token = request.args.get('token')
+	if not authentication_token:
+		abort(400)
 
+	return render_template('reset-password.html', token = authentication_token, csrf_token = gen_csrf())
