@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 import unittest
 from admin import create_app as private_app
 from blog import create_app as public_app
@@ -29,7 +30,7 @@ class CLIENT_APPLICATION_TEST_CASE(unittest.TestCase):
 		admin_user.confirm = True
 		admin_user.password ='seth'
 
-		normal_user = User(username='normal', email = 'normal@normal.com')
+		normal_user = User(username='normal', email = 'normal@gmail.com')
 		normal_user.password ='normal'
 		normal_user.user_app_id = 'test'
 		normal_user.confirm = True
@@ -76,11 +77,16 @@ class CLIENT_APPLICATION_TEST_CASE(unittest.TestCase):
 		self.public_app_context.push()
 		self.client = self.public_app.test_client(use_cookies = True)
 
+
+
 	def tearDown(self):
 		self.public_app_context.pop()
 
+	def _content(self, response):
+		return BeautifulSoup(response.data.decode('utf8'), 'html.parser')
+
 	def login(self):
-		user = User.query.filter_by(email = 'normal@normal.com').first()
+		user = User.query.filter_by(email = 'normal@gmail.com').first()
 		self.client.post(url_for('client.login_alternate'), data = {
 			'csrf-token':'token',
 			'email': user.email,
@@ -160,7 +166,7 @@ class CLIENT_APPLICATION_TEST_CASE(unittest.TestCase):
 
 		content = self._content(response)
 		print(content.title.string)
-		self.assertTrue(content.title.string.strip() == 'Login: Bloggy')
+		self.assertTrue(content.title.string.strip() == 'Login')
 	
 	def test_register(self):
 		pass
