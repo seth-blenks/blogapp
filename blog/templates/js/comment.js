@@ -19,9 +19,13 @@ comment_submit.addEventListener('click',function(){
 		fetch('{{url_for("client.comment")}}',{
 			'method': 'POST',
 			'body': formdata
-		}).then(response => response.json()).then(data => {
-			comment_message.value = ''
-			display_comments(data);
+		}).then(response => {
+			response.json().then( data => {
+				if(response.status == 302) location.href = data;
+				comment_message.value = ''
+				display_comments(data);
+			})
+			
 		})
 	}
 })

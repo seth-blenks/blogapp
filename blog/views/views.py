@@ -10,6 +10,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 from os import path
 from logging import getLogger
+from datetime import datetime
 
 
 logger = getLogger('gunicorn.error')
@@ -20,7 +21,6 @@ def client_context():
 	return {'me': User.query.filter_by(role_id = admin_id.id).first(),
 	'categories':Category.query.all(),
 	'tags': Tag.query.all() }
-
 
 
 @client.route('/login/alternate', methods=['POST'])
@@ -51,10 +51,6 @@ def blog():
 	return render_template('blogs.html', pagination = pagination, articles = articles)
 
 
-
-
-
-
 @client.route('/<category>/')
 def blog_category(category):
 	cat = Category.query.filter_by(name = category).first()
@@ -75,9 +71,6 @@ def blog_details(category, title):
 
 	others = BlogPost.query.filter(BlogPost.category == cat).paginate(1,5, error_out= False).items
 	return render_template('blog_details.html', blog = blog, others = others, categories = Category.query.all(), tags = Tag.query.all(), csrf_token = gen_csrf())
-
-
-
 
 
 @client.route('/login', methods=['GET','POST'])
@@ -117,7 +110,7 @@ def register():
 		csrf = request.form.get('csrf-token')
 		email = request.form.get('email')
 		password = request.form.get('password')
-		confirm_password = request.form.get('confirm_password')
+		confirm_password = request.form.get('confirm-password')
 		username = request.form.get('username')
 
 		logger.info(f'{email} : {password} : {confirm_password} : {username} : {csrf} ')
@@ -219,9 +212,18 @@ def search():
 	return render_template('blogs.html', pagination = pagination, types = types, articles = articles, others = others, categories = Category.query.all(), tags = Tag.query.all())
 
 
+
+
+
+
+
+
 @client.route('/comments', methods=['GET','POST'])
 def comment():
 	if request.method == 'POST':
+		if not current_user.confirm:
+			return jsonify(url_for('client.confirm_account')), 302
+
 		csrf_token = request.form.get('csrf-token')
 		comment = request.form.get('comment')
 		post_id = request.form.get('post-id')
@@ -300,6 +302,37 @@ def favicon():
 def terms():
 	return render_template('terms and conditions.html')
 
+
+
+
+
+
+
+@client.route('/confirm', methods = ['POST','GET'])
+@login_required
+def confirm_account():
+	if request.method == 'POST':
+		token = current_user.generate_confirmation_token()
+		send_email([current_user.email,], 'Confirm Your Account', render_template('mail/confirmation.html', token = token, user = current_user, date = datetime.now()))
+		logger.info('Confirmation token has been sent to users email address')
+		return jsonify('Confirmation Token has been sent to email address')
+
+	confirmation_token = request.args.get('token')
+	if confirmation_token:
+		if current_user.confirm_token(confirmation_token):
+			user = current_user._get_current_object()
+			user.confirm = True
+			sql.session.add(user)
+			sql.session.commit()
+
+			flash('Your Account has been confirmed. Thank You')
+			_next = request.args.get('next')
+			if _next:
+				return redirect(_next)
+
+			return redirect(url_for('client.blog'))
+
+	return render_template('confirmation.html')
 
 
 

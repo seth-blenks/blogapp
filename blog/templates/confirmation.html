@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  {% from 'macro.html' import header,links,footer,scripts, meta with context %}
+  {{meta()}}
+  {{links()}}
+</head>
+
+<body>
+  <style>
+    
+
+    
+    .my-image{
+      width: 100%;
+    }
+
+    .disabled{
+      pointer-events: none;
+    }
+.entries{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.blog .item-box .entry{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.blog .entry .entry-title{
+  font-size: 0.9rem;
+}
+
+.blog .entry .entry-meta{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.blog .blog-pagination{
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  border-bottom: 0.5px solid #ccc;
+  border-top: 0.5px solid #ccc;
+}
+  </style>
+
+  {{header()}}
+
+
+  <main id="main">
+    <!-- ======= Breadcrumbs ======= -->
+    <section id="breadcrumbs" class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Blog</h2>
+          <ol>
+            <li><a href="{{url_for('client.blog')}}">Home</a></li>
+            <li>Account</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <section id="blog" class="blog">
+      <div class="container-fluid text-center" data-aos="fade-up">
+          <div class='card'>
+            <div class='card-body'>
+            <div class="alert alert-info fade" role="alert">
+                <span class='message'></span>
+            </div>
+            <h2> Confirm Your Account </h2>
+            <p> Your account has not been confirmed.<br><br> Check your mailbox and confrim your account or <a id='confirm' class='text-success'>Click Here </a>. </p>
+          </div>
+          </div>
+        </div>
+    </section>
+  </main><!-- End #main -->
+  {{footer()}}
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  {{scripts()}}
+  <script type="text/javascript">
+    document.querySelector('#confirm').addEventListener('click', function(){
+      let alert_info = document.querySelector('.alert-info')
+      let message = document.querySelector('.alert-info .message')
+      message.innerText = 'A new verification link has been sent to your email address'
+      alert_info.classList.add('show')
+
+      fetch("{{url_for('client.confirm_account')}}", {
+        "method": "POST",
+      }).then( response => {
+        console.log(response)
+      })
+    })
+  </script>
+
+</body>
+
+</html>

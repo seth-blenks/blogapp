@@ -11,11 +11,21 @@ from os import path, remove
 from database import Image, sql
 import logging
 import math, random
+from datetime import datetime
 
 logger = logging.getLogger('gunicorn.error')
 
 
+def confirm_account_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        user = current_user._get_current_object()
+        if user.is_confirmed():
+            return f(*args, **kwargs)
+        return redirect(url_for('client.confirm_account'))
+    return wrapper
  
+
 # function to generate OTP
 def generateOTP() :
  
