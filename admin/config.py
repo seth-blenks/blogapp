@@ -6,7 +6,6 @@ class Basic:
 	SECRET_KEY = 'secret'
 	SQLALCHEMY_TRACK_MODIFICATIONS = True
 	IMAGE_DIRECTORY = '/var/www/images'
-	ADMIN_EMAIL = os.environ['ADMIN_EMAIL']
 	GOOGLE_CLIENT_ID = os.environ['GOOGLE_CLIENT_ID']
 	GOOGLE_CLIENT_SECRET = os.environ['GOOGLE_CLIENT_SECRET']
 	GOOGLE_ANALYTICS_PROPERTY_ID = os.environ['GOOGLE_ANALYTICS_PROPERTY_ID']
@@ -15,6 +14,7 @@ class Basic:
 	
 
 class Development(Basic):
+	ADMIN_EMAIL = 'example@gmail.com'
 	MAIL_SERVER = 'www.vandies.com'
 	MAIL_PORT = 25
 	MAIL_USERNAME = 'seth'
@@ -41,12 +41,12 @@ class Testing(Basic):
 	MAIL_EMAIL_SERVER = 'www.vandies.com'
 	MAIL_DEFAULT_SENDER = 'seth'
 	MAIL_USE_SSL = False
-	ADMIN_EMAIL = 'chembio451@gmail.com'
+	ADMIN_EMAIL = 'example@gmail.com'
 
 
 class Production(Basic):
 	SECRET_KEY = os.environ['SECRET_KEY']
-
+	ADMIN_EMAIL = os.environ['ADMIN_EMAIL']
 	MAIL_SERVER = os.environ['MAIL_SERVER']
 	MAIL_PORT = os.environ['MAIL_PORT']
 	MAIL_USERNAME = os.environ['MAIL_USERNAME']

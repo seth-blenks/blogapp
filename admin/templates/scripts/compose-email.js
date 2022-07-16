@@ -17,6 +17,9 @@ compose_email_select_field.addEventListener('input',function(){
 	}
 })
 compose_email_submit_button.addEventListener('click', function(){
+	let _button = this;
+	_button.innerHTML = '<i class="bi bi-arrow-repeat fa-spin"></i>'
+
 	let csrf = compose_email_csrf.value
 	let subject = compose_email_subject.value
 	let content = compose_email_content.value
@@ -37,8 +40,10 @@ compose_email_submit_button.addEventListener('click', function(){
 					fetch('{{url_for("administrator.compose_email")}}', {
 						'method': 'POST',
 						'body': formdata
-					}).then( response => {
-						console.log(response.status);
+					}).then( response => response.json()).then( data => {
+						_button.innerHTML = "<span> Create </span><i class='bi bi-node-plus-fill'></i>"
+						document.querySelector('.modal-body').innerText = data
+						new bootstrap.Modal('#smallModal').show();
 					})
 			})
 		}else{
@@ -52,9 +57,11 @@ compose_email_submit_button.addEventListener('click', function(){
 				fetch('/admin/compose/email', {
 					'method': 'POST',
 					'body': formdata
-				}).then( response => {
-					console.log(response.status);
-				})
+				}).then( response => response.json()).then( data => {
+						_button.innerHTML = "<span> Create </span><i class='bi bi-node-plus-fill'></i>"
+						document.querySelector('.modal-body').innerText = data
+						new bootstrap.Modal('#smallModal').show();
+					})
 			}
 			
 		}

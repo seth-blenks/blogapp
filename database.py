@@ -99,7 +99,10 @@ class User(sql.Model, UserMixin):
 	id = sql.Column(sql.Integer, primary_key = True, autoincrement = True)
 	username = sql.Column(sql.String(112))
 	email = sql.Column(sql.String(112), unique = True)
+	admin_authenticated = sql.Column(sql.Boolean, default = False)
 	authenticated = sql.Column(sql.Boolean, default = False)
+	confirm = sql.Column(sql.Boolean, default = False)
+	user_app_id = sql.Column(sql.Text(72), unique = True)
 	restricted = sql.Column(sql.Boolean, default = False)
 	image_url = sql.Column(sql.String(225))
 	_password = sql.Column(sql.String(225))
@@ -205,11 +208,7 @@ blogpost_to_tags = sql.Table('blogpost_to_tags',
 	sql.Column('tag_id', sql.Integer, sql.ForeignKey('tag.id'))
 	)
 
-class Like(sql.Model):
-	__tablename__ = 'userlike'
-	id = sql.Column(sql.Integer, primary_key = True, autoincrement = True)
-	user_id = sql.Column(sql.Integer, sql.ForeignKey('webuser.id'))
-	blogpost_id = sql.Column(sql.Integer, sql.ForeignKey('blogpost.id'))
+
 
 
 class BlogPost(sql.Model):
@@ -226,7 +225,6 @@ class BlogPost(sql.Model):
 	user_id = sql.Column(sql.Integer, sql.ForeignKey('webuser.id'))
 	image = sql.relationship('Image', backref=sql.backref('blogs'))
 	user = sql.relationship('User', backref=sql.backref('blogs'))
-	reactions = sql.relationship('Like', backref=sql.backref('blog'), lazy='dynamic')
 
 	@staticmethod
 	def on_changed_content(target, value, old_value, initiator):

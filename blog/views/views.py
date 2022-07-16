@@ -1,13 +1,9 @@
-
-
-
-
 from . import client
 from flask_login import login_user, logout_user, login_required, current_user
-from database import User, sql, Like, BlogPost, Category,Role, Tag, Comment, Notification, Ntype
+from database import User, sql, BlogPost, Category,Role, Tag, Comment, Notification, Ntype
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous.exc import BadSignature
-from ..utils import gen_csrf, validate_csrf, password_required
+from ..utils import gen_csrf, validate_csrf, password_required, gen_app_id
 from ..utils.tools import send_email
 from flask import session, render_template,  current_app, url_for, request, jsonify, flash, redirect, abort, Response
 from google.oauth2 import id_token
@@ -115,43 +111,52 @@ def login():
 
 	return render_template('login.html', csrf_token = gen_csrf())
 
-@client.route('/register', methods=['POST','GET'])
+@client.route('/register', methods=['GET','POST'])
 def register():
-	client_id = current_app.config['GOOGLE_CLIENT_ID']
-
 	if request.method == 'POST':
-		token = request.form.get('credential')
-		try:
-			# Specify the CLIENT_ID of the app that accesses the backend
-			idinfo = id_token.verify_oauth2_token(token, requests.Request(), current_app.config['GOOGLE_CLIENT_ID'])
-			
-			if idinfo['email_verified']:
-				useremail = idinfo['email']
-				_user = User.query.filter_by(email = useremail).first()
-				if _user:
-					_user.authenticated = True
-					sql.session.add(_user)
-					sql.session.commit()
-					login_user(_user)
-					session['google-login'] = True
-					if not _user.has_password():
-						return redirect(url_for('client.set_password'))
+		csrf = request.form.get('csrf-token')
+		email = request.form.get('email')
+		password = request.form.get('password')
+		confirm_password = request.form.get('confirm_password')
+		username = request.form.get('username')
 
-					return redirect(url_for('client.blog'))
-				else:
-					_user = User(username = idinfo['name'], email = useremail)
-					_user.authenticated = True
-					_user.image_url = idinfo['picture']
-					sql.session.add(_user)
-					sql.session.commit()
-					login_user(_user)
-					session['google-login'] = True
-					return redirect(url_for('client.set_password'))
-					
-		except ValueError:
-			return abort(401)
+		logger.info(f'{email} : {password} : {confirm_password} : {username} : {csrf} ')
 
-	return render_template('register.html', client_id = client_id)
+		if validate_csrf(csrf) and email and password and confirm_password and username:
+			logger.info('Entries confirmed')
+
+			if not confirm_password == password:
+				logger.info('Password does not match')
+				flash('Confirm Password and Password must be the same')
+				return redirect(url_for('client.register'))
+
+			user = User.query.filter_by(email = email).first()
+			if user:
+				logger.info('User email is already registered')
+				flash('Email Already linked to an account. Login Instead')
+				return redirect(url_for('client.login'))
+
+
+			user_entry = User(username = username, email = email)
+			user_entry.password = password
+			user_entry.user_app_id = gen_app_id()
+			sql.session.add(user_entry)
+			sql.session.commit()
+
+			logger.info('User registered successfully. Check your mail box to confirm your account')
+
+			confirm_token = user_entry.generate_confirmation_token()
+			send_email([user_entry.email,], 'Confirm Your Account', render_template('mail/confirmation.html', token = confirm_token, user = user_entry, date = datetime.now()))
+			flash('User registered successfully. Check your mail box to confirm your account')
+
+			_next = request.args.get('next')
+			if _next:
+				return redirect(url_for('client.login', next = _next))
+
+			return redirect(url_for('client.login'))
+
+	return render_template('register.html', csrf_token = gen_csrf())
+
 
 @client.route('/logout')
 @login_required
@@ -295,28 +300,8 @@ def favicon():
 def terms():
 	return render_template('terms and conditions.html')
 
-@client.route('/react', methods=['POST'])
-def react():
-	csrf = request.form.get('csrf-token')
-	blogpost_id = request.form.get('blogpost-id')
 
-	if validate_csrf(csrf) and blogpost_id:
-		logger.info(f'Like uploaded by {current_user.id} for post {blogpost_id}')
-		blog = BlogPost.query.get(int(blogpost_id))
 
-		like = Like.query.filter_by(user_id = current_user.id).filter_by(blogpost_id = int(blogpost_id)).first()
-		if like:
-			logger.info(f'removing like {like.id}')
-			sql.session.delete(like)
-		else:
-			sql.session.add(Like(user_id = current_user.id, blogpost_id = blogpost_id))
-			sql.session.add(Notification(name='Like',message=f'{current_user.username} just liked your post :{blog.title}',
-			 notification_type = Ntype.LIKE.value,
-			 link = url_for('client.blog_details', title = blog.title)))
-		sql.session.commit()
-
-		return jsonify('done'), 200
-	return jsonify('failed'), 401
 
 @client.route('/js/<filename>')
 def js(filename):
@@ -325,9 +310,6 @@ def js(filename):
 	response.mimetype = 'text/javascript'
 	response.data = script
 	return response
-
-
-
 
 
 @client.route('/reads', methods=['POST'])
@@ -345,7 +327,6 @@ def reads():
 	return jsonify('failed'), 401
 
 ##################### PASSWORD RESET VIEWS ##################################
-##################### PASSWORD RESET VIEWS ##################################
 
 @client.route('/password/reset', methods=['GET','POST'])
 def start_password_reset():
@@ -361,9 +342,7 @@ def start_password_reset():
 		return jsonify('User Email not found in database')
 
 	return render_template('forgot-password-form.html', csrf_token = gen_csrf())
-	
-
-	
+		
 
 @client.route('/reset_password', methods=['GET','POST'])
 def reset_password():
@@ -390,6 +369,7 @@ def reset_password():
 				user = User.query.get(int(user_id))
 				if user:
 					user.password = new_password
+					user.user_app_id = gen_app_id()
 					sql.session.add(user)
 					sql.session.commit()
 					flash('Your password has been reset. You can now login with your new password. Thanks')
@@ -405,6 +385,7 @@ def reset_password():
 		abort(400)
 
 	return render_template('reset-password.html', token = authentication_token, csrf_token = gen_csrf())
+
 
 @client.route('/dynamic/<section>/<filename>')
 def dynamic(section, filename):

@@ -31,6 +31,9 @@ def generateOTP() :
  
     return OTP
 
+def gen_app_id():
+    return uuid4().hex + str(datetime.now().timestamp()).replace('.','') 
+
 def validate_csrf(csrf):
     if current_app.config['TESTING']:
         return True

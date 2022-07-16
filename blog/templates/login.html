@@ -1,70 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends 'forms.html' %}
+{% block title %} Login {% endblock %}
+{% block content %}
 
-	<meta charset="utf-8">
-	<title>Sign Up: Folow us</title>
-  <link href="{{url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-
-</head>
-<body>
-  <style>
-
-html, body{
-  height: 100%;
-}
-  main{
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  input, form{
-    margin: 1rem 0px;
-  }
-
-  .custom-button{
-    background-color:  #008890;
-    color:  #fff;
-  }
-
-img{
-  width: 100%;
-  display: block;
-
-}
-
-.large-only{
-  display: none;
-}
-  a{
-  color: grey;
-  display: block;
-  margin-top: 10px;
-  font-size: 0.875rem;
-}
-
-div .col-11 img{
-  height: 150px;
-}
-  
-@media screen and (min-width: 993px){
-  .large-only{
-    display: block;
-  }
-}
-  
-
-  </style>
-	<main>
-    <div class='d-flex justify-content-center align-items-center'>
-      
-      <div class='col-lg-5 large-only'>
-        <img src='/static/images/login-man3.jpg' />
-      </div>
-	   <div class="col-11 col-lg-5 col-md-7">
-        <img src='/static/images/logo.png' />
         <form role="form" method='post'>
           {% for message in get_flashed_messages() %}
             <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -83,10 +20,4 @@ div .col-11 img{
           </div>
 
         </form>
-      </div>
-    </div>
-  </main>
-
-  <script src="{{url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-</body>
-</html>
+{% endblock %}

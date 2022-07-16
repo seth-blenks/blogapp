@@ -4,7 +4,7 @@ from database import sql, login_manager
 from .utils.tools import mailer
 from .views import client
 
-blog_app = Flask(__name__, static_folder='./static')
+blog_app = Flask(__name__, static_folder='static')
 
 def create_app(config):
 	blog_app.config.from_object(configurations[config])

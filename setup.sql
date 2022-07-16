@@ -33,6 +33,8 @@ create table if not exists webuser(
 	authenticated bool default false,
 	admin_authenticated bool default false,
 	restricted bool default false,
+	user_app_id varchar(75) unique,
+	confirm bool default false,
 	image_url varchar(225),
 	_password varchar(225),
 	role_id integer references role (id),
@@ -71,26 +73,8 @@ create table if not exists blogpost(
 	category_id integer references category(id) on delete cascade
 );
 
-create table if not exists userlike(
-	id serial primary key,
-	user_id integer references webuser(id),
-	blogpost_id integer references blogpost(id)
-);
 
 
-
-create table if not exists product(
-	id serial primary key,
-	name varchar(122) not null,
-	amount integer not null,
-	product_type varchar(102) not null
-);
-
-create table if not exists sale(
-	id serial primary key,
-	product_id integer references product(id) on delete cascade,
-	user_id integer references webuser(id) on delete cascade
-);
 
 create table if not exists blogpost_to_tags(
 	id serial primary key,
@@ -151,8 +135,8 @@ grant select on category to publicuser;
 grant select on role to publicuser;
 
 
-GRANT SELECT on blogpost_to_tags, notification, sale, product,userlike,tag, category,image, role, userdetails,record to publicuser;
-GRANT UPDATE,INSERT,DELETE on userlike, userdetails to publicuser;
+GRANT SELECT on blogpost_to_tags, notification, tag, category,image, role, userdetails,record to publicuser;
+GRANT UPDATE,INSERT,DELETE on  userdetails to publicuser;
 
 
 CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE ON blogpost FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger(search, 'pg_catalog.english', title, content);

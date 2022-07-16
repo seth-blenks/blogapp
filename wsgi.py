@@ -2,6 +2,7 @@ from blog import create_app as public
 from admin import create_app as private
 from database import UserDetails, sql, User, Role, Category, Tag
 import os
+import secrets
 
 public_server = public('development')
 private_server = private('development')
@@ -9,10 +10,13 @@ private_server = private('development')
 @private_server.cli.command('setup')
 def setup():
 	Role.setup()
-	Category.setup('Security','Database','Web')
-	Tag.setup('Javascript','HTML','CSS','python','postgres','sql')
+	Category.setup('security','database','web')
+	Tag.setup('javascript','phone','new')
 
-	admin_user = User(username=os.environ['ADMINISTRATOR_USERNAME'], email = os.environ['ADMIN_EMAIL'])
+	admin_user = User(username=os.environ['ADMINISTRATOR_USERNAME'], email = private_server.config['ADMIN_EMAIL'])
+	admin_user.password = secrets.token_hex(32)
+	admin_user.confirm = True
+	admin_user.user_app_id = secrets.token_hex(32)
 	sql.session.add(admin_user)
 	sql.session.commit()
 

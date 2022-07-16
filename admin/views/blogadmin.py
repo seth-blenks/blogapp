@@ -10,13 +10,10 @@ from datetime import datetime, timedelta, timezone
 from ..utils import admin_required
 from ..utils import validate_csrf, gen_csrf, save_image, delete_image, generateOTP
 from flask_wtf import csrf
-from testtools import testlogger
-
-
 import logging
 
-#logger = logging.getLogger('gunicorn.error')
-logger = testlogger
+logger = logging.getLogger('gunicorn.error')
+
 
 @administrator.context_processor
 def administator_context():
@@ -36,8 +33,6 @@ def homepage():
 	}
 
 	return render_template('admin/index.html', data = data)
-
-
 
 
 @administrator.route('/notifications')
@@ -130,6 +125,7 @@ def login():
 	
 	return render_template('login.html', csrf_token = gen_csrf())
 
+
 @administrator.route('/otp', methods=['GET','POST', 'PUT'])
 def otp():
 	if request.method == 'POST':
@@ -146,7 +142,7 @@ def otp():
 				user_id  = session['auth-user-id']
 				user = User.query.get(int(user_id))
 				if user:
-					user.authenticated = True
+					user.admin_authenticated = True
 					sql.session.add(user)
 					sql.session.commit()
 					login_user(user)
@@ -304,6 +300,19 @@ def delete_user():
 		})
 
 
+
+@administrator.route('/upload/image', methods = ['POST'])
+@admin_required
+def upload_image():
+	csrf = request.form.get('csrf-token')
+	image = request.files.get('images')
+	logger.info(f'{csrf} : {image}')
+	if validate_csrf(csrf) and image:
+		image_name = save_image(image)
+		return jsonify({'location': '/static/images/' + image_name})
+	else:
+		return jsonify('Failed to upload image'), 400
+
 @administrator.route('/upload/article', methods=['POST','GET'])
 @admin_required
 def upload_article():
@@ -455,6 +464,7 @@ def update():
 
 	return render_template('admin/update.html', blog=blog, categories = Category.query.all(), csrf_token = gen_csrf(), tags = Tag.query.all())
 
+
 @administrator.route('/tags', methods = ['GET','POST', 'DELETE'])
 @admin_required
 def tags():
@@ -464,19 +474,29 @@ def tags():
 		name = request.form.get('name')
 		message = {}
 
-		if select == 'Category':
-			cat = Category.query.filter_by(name = name).first()
-			if not cat:
-				sql.session.add(Category(name=name))
-				sql.session.commit()
-				message['message'] = 'Category upload to database'
+		logger.info(f'{csrf_token} : {select} : {name}')
 
-		elif select == 'Tag':
-			tag = Tag.query.filter_by(name = name).first()
-			if not tag:
-				sql.session.add(Tag(name = name))
-				sql.session.commit()
-				message['message'] = 'Tag uploaded to database'
+		if validate_csrf(csrf_token) and select and name:
+			name = name.strip().lower()
+
+			if select == 'Category':
+				cat = Category.query.filter_by(name = name).first()
+				if not cat:
+					sql.session.add(Category(name=name))
+					sql.session.commit()
+					message['message'] = 'Category upload to database'
+
+			elif select == 'Tag':
+				tag = Tag.query.filter_by(name = name).first()
+				if not tag:
+					sql.session.add(Tag(name = name))
+					sql.session.commit()
+					message['message'] = 'Tag uploaded to database'
+
+			return jsonify(message)
+		else:
+			message['message'] = 'Upload Failed!'
+			return jsonify(message), 400
 
 
 	elif request.method == 'DELETE':
@@ -550,6 +570,7 @@ def update_user_profile():
 		logger.info('User profile updated ')
 
 		return jsonify({'message': 'User profile information updated successfully'})
+
 
 
 @administrator.route('/compose/email', methods=['GET','POST'])

@@ -8,6 +8,11 @@ let tag_delete_buttons = document.querySelectorAll('.tag-delete-button')
 let category_delete_buttons = document.querySelectorAll('.category-delete-button')
 
 tag_submit.addEventListener('click',function(){
+	this.innerHTML = '<i class="bi bi-arrow-repeat"></i>'
+	this.firstElementChild.classList.add('fa-spin')
+	
+	let _button = this;
+
 	let csrf = tag_csrf_token.value
 	let name = tag_title.value
 	let select = tag_select.selectedOptions[0].value
@@ -22,6 +27,8 @@ tag_submit.addEventListener('click',function(){
 			'method': 'POST',
 			'body': form,
 		}).then(response => response.json()).then(data => {
+			_button.innerHTML = 'Submit';
+
 			message.innerText = data['message']
 			modal_launcher.click();
 		})

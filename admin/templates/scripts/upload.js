@@ -154,6 +154,9 @@ composition_image.addEventListener('input', function(){
 })
 
 composition_submit_button.addEventListener('click',function(){
+  let _button = this;
+  _button.innerHTML = '<i class="fa-spin bi bi-arrow-repeat"></i>'
+
   console.log('uploading file to database')
   let title = composition_title.value
   let description = composition_description.value
@@ -183,6 +186,7 @@ composition_submit_button.addEventListener('click',function(){
       method: 'POST',
       'body': formdata
     }).then(response => {
+      _button.innerHTML = 'Upload';
       if(response.status < 500){
         response.json().then( data => {
           message.innerText = data['message']

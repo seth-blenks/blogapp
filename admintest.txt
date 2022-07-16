@@ -271,3 +271,17 @@ testtools - INFO : passed used title validation
 testtools - INFO : No Category specified or category is not found in database
 testtools - WARNING : This application is running in a test environment
 testtools - WARNING : This application is running in a test environment
+testtools - INFO : start the send email operation with token b'eyJhbGciOiJIUzUxMiIsImlhdCI6MTY1Nzg5NTE5OCwiZXhwIjoxNjU3ODk4Nzk4fQ.eyJ1c2VyLWlkIjoxfQ.3zCDcaPEPPmHLBufOTfzVrJvCiArCAuA9N-8ifBz7VR-MMpaHR2I0Kb7wcXGiFqPjXJ6yzuBYfu_0Hww1IfLBg'
+testtools - INFO : start the send email operation with token b'eyJhbGciOiJIUzUxMiIsImlhdCI6MTY1Nzg5NjgwOSwiZXhwIjoxNjU3OTAwNDA5fQ.eyJ1c2VyLWlkIjoxfQ.3kafgtwfvOzUXQ-AW1VE51BJPnZTE3wcLYMMPEq1G0-i-dTcGSeuLoZHtsytSx8JpFG4JmdLVien0SLxm-uaKg'
+testtools - INFO : Starting application reset password flow
+testtools - INFO : Starting application reset password flow
+testtools - INFO : User id generated from reset token: 1
+testtools - INFO : New-Password: password
+testtools - INFO : Confirm-Password: password
+testtools - INFO : CSRF-Token: IjgzOTg4NmZjODYyZDNjNGI3YzdiMGRjZWU1NGI4MzIxYWI2YzM4NTAi.YtF_-g.ng-Eu1vlR4-vBASoUohdhUIUx2w
+testtools - INFO : OTP: 	 4263
+testtools - INFO : csrf-token: 	 IjgzOTg4NmZjODYyZDNjNGI3YzdiMGRjZWU1NGI4MzIxYWI2YzM4NTAi.YtGACA.HZxWrRMzNYesYFyDGMhp1-C8coU
+testtools - INFO : OTP: 	 8200
+testtools - INFO : csrf-token: 	 IjhmZjNiYjcxYjM0MTM5MmMyMWIzNTExMjA0NjVjZDJlNzE4ZmRiYTki.YtH-_g.YGgCA_Q57VlHPwwx2WnGjRLOWJ4
+testtools - INFO : OTP: 	 8200
+testtools - INFO : csrf-token: 	 IjhmZjNiYjcxYjM0MTM5MmMyMWIzNTExMjA0NjVjZDJlNzE4ZmRiYTki.YtH-_g.YGgCA_Q57VlHPwwx2WnGjRLOWJ4

@@ -77,7 +77,12 @@
 
         <div class="row">
           <div class="entries">
-            
+            {% if not articles %}
+            <div class='col-12 text-center'>
+              <h2> You Blog Uploaded </h2>
+              <p> Visit the administrators panel and upload a blog </p>
+            </div>
+            {% else %}
             {% for blog in articles %}
             <div class='item-box col-12 col-lg-4 col-md-6 '>
             <article itemscope itemtype='https://schema.org/BlogPosting' class="entry">
@@ -113,6 +118,7 @@
             </article><!-- End blog entry -->
             </div>
             {% endfor %}
+            {% endif %}
 
             <div class='container-fluid'>
             <div class="blog-pagination">

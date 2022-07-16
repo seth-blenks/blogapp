@@ -1,78 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-	{% from 'macro.html' import links, scripts, meta %}
-	<meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-	<title>Sign In</title>
-	{{links()}}
-  {{meta()}}
-	<script src="https://accounts.google.com/gsi/client" async defer></script>
-</head>
-<body>
-  <style>
-  html,body{
-    height: 100%;
-  }
-  main{
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+{% extends 'forms.html' %}
+{% block title %} Login {% endblock %}
+{% block content %}
 
-  input, form{
-    margin: 1rem 0px;
-  }
+        <form role="form" method='post'>
+          {% for message in get_flashed_messages() %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+             {{message}}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+          <input type='hidden' name='csrf-token' value="{{csrf_token}}" />
+          <label for='username'> Username </label>
+          <input type='text' name='username' class='form-control' id='username' placeholder='Your Username' required />
+          <label for='email'> Email </label>
+          <input type="email" name="email" class="form-control" id="name" placeholder="Your Email" required>
+          <label for='password'> Password </label>
+          <input type="password" class="form-control" name="password" id="email" placeholder="Your Password" required>
+          <label for='confirm-password'> Confirm Password </label>
+          <input type='password' class='form-control' name='confirm-password' id='confirm-password' placeholder='Re-enter Password ' required >
+          
+          <button type="submit" class='btn custom-button form-control'>Continue ...</button>
+          <div class='d-flex justify-content-between'>
+            <a href='{{url_for("client.start_password_reset")}}'>Forgot Password?</a>
+            <a href='{{url_for("client.register")}}'>Create Account</a>
+          </div>
 
-  .custom-button{
-    background-color:  #008890;
-    color:  #fff;
-  }
-
-  img{
-    max-width: 360px;
-    width: 100%;
-    height: 150px;
-    display: block;
-  }
-
-  main > div{
-    display: flex;
-    flex-direction: column;
-  }
-
-  main > div > img{
-    align-self: center;
-  }
-
-  p{
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  </style>
-	<main>
-	<div class="col-11 col-lg-5 col-md-7 mt-5 mt-lg-0">
-        <img src='/static/img/brand.png' />
-        <p class='text-center'> Login to gain access to full features </p>
-        <div>
-          <div id="g_id_onload"
-         data-client_id="{{client_id}}"
-         data-login_uri="https://www.seth-seth.xyz/register"
-         data-auto_prompt="false">
-      </div>
-	      <div class="g_id_signin"
-	         data-type="standard"
-	         data-size="large"
-	         data-theme="outline"
-	         data-text="Sign_In_With"
-	         data-shape="circle"
-	         data-logo_alignment="left">
-	      </div>
-        </div>
-      </div>
-  </main>
-
-    {{scripts()}}
-</body>
-</html>
+        </form>
+{% endblock %}

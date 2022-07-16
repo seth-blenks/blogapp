@@ -48,11 +48,10 @@ def gen_csrf():
 def admin_required(f):
 	@wraps(f)
 	def wrapper(*args, **kwargs):
-		if not (current_user.is_admin() and current_user.is_authenticated):
+		if not (current_user.admin_authenticated and current_user.is_authenticated):
 			abort(404)
 		else:
 			return f(*args, **kwargs)
-
 	return wrapper
 
 def password_required(f):
