@@ -23,13 +23,16 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		Category.setup('Computer')
 		Tag.setup('Yellow','Green','Pink','Red')
 
-		admin_user = User(username=os.environ['ADMINISTRATOR_USERNAME'], email = os.environ['ADMIN_EMAIL'])
+		admin_user = User(username=os.environ['ADMINISTRATOR_USERNAME'], email = self.private_app.config['ADMIN_EMAIL'])
 		admin_user.password ='seth'
+		admin_user.confirm = True
+		admin_user.user_app_id = 'texting'
 		sql.session.add(admin_user)
 		sql.session.commit()
 
 		admin_profile = UserDetails(fullname=admin_user.username, phone = os.environ['ADMININSTRATOR_PHONE'])
 		admin_profile.user = admin_user
+
 		sql.session.add(admin_profile)
 		sql.session.commit()
 
@@ -58,18 +61,30 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 	def test_admin_login(self):
 		response = self.client.post(url_for('administrator.login'), data={
 			'csrf-token': 'token',
-			'email': 'chembio451@gmail.com',
+			'email': 'example@gmail.com',
 			'password': 'seth'
-			} )
+			}, follow_redirects = True)
+		content = self._content(response)
+		self.assertTrue('Two Factor Authentication' == content.title.string.strip())
 
-		self.assertTrue(response.status_code == 302)
+		response = self.client.post(url_for('administrator.otp'), data = {
+			'csrf-token': 'token',
+			'otp': input('Enter OTP'),
+			}, follow_redirects = True)
+		print(response)
+
+		content = self._content(response)
+		self.assertTrue('Dashboard - Bloggy' == content.title.string)
 
 	def admin_login(self):
 		response = self.client.post(url_for('administrator.alternate_login'), data={
 			'csrf-token': 'token',
-			'email': 'chembio451@gmail.com',
+			'email': 'example@gmail.com',
 			'password': 'seth'
-			} )
+			}, follow_redirects = True)
+
+		
+
 
 	
 	def test_post_blog(self):
@@ -294,7 +309,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 		self.assertTrue(response.status_code == 200)
 
 		response = self.client.post(url_for('administrator.start_password_reset'), data = {
-			'email': 'chembio451@gmail.com'
+			'email': 'example@gmail.com'
 			})
 		self.assertTrue(response.json == 'Click on the link provided in the email sent to your email address to reset your password. Thanks')
 
@@ -310,7 +325,7 @@ class ADMIN_APPLICATION_TEST_CASE(unittest.TestCase):
 
 		content = self._content(response)
 		print(content.title.string)
-		self.assertTrue(content.title.string == 'Admin Login')
+		self.assertTrue(content.title.string.strip() == 'Login To Admin Panel')
 
 
 

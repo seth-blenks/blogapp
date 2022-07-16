@@ -7,12 +7,12 @@ from ..utils.tools import send_email, imapclient
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from database import UserDetails
 from datetime import datetime, timedelta, timezone
-from ..utils import admin_required
+from ..utils import admin_required, gen_app_id
 from ..utils import validate_csrf, gen_csrf, save_image, delete_image, generateOTP
 from flask_wtf import csrf
 import logging
 
-logger = logging.getLogger('gunicorn.error')
+logger = logging.getLogger('testing')
 
 
 @administrator.context_processor
@@ -28,7 +28,7 @@ def homepage():
 	'notifications': notifications,
 	'notifications-count': len(notifications),
 	'top-reads': BlogPost.query.order_by(BlogPost.reads.desc()).paginate(1,10,error_out = False).items,
-	'new-emails-count': imapclient.fetch_new_emails_count(),
+	'new-emails-count': 1,
 	'mailserver': current_app.config['MAIL_EMAIL_SERVER']
 	}
 
@@ -51,6 +51,7 @@ def user_profile():
 @administrator.route('/alternate/login', methods=['POST'])
 def alternate_login():
 	if not current_app.config['PERSONALTESTING']:
+		logger.info('The application is not testing mode returning 404')
 		abort(404)
 
 	logger.warning(f'This application is running in a test environment')
@@ -59,15 +60,22 @@ def alternate_login():
 	email = request.form.get('email')
 	password = request.form.get('password')
 
+	logger.info(f'{csrf_token} : {email} : {password}')
+
 	if validate_csrf(csrf_token) and email and password:
+		logger.info('Validated the users properlay')
 		user = User.query.filter_by(email = email).first()
 		if user and user.is_admin():
+			logger.info(f'Checking if user is admin: {user.is_admin}')
 			if user.check_password(password):
+				logger.info(f'password verificated')
 				user.authenticated = True
+				user.admin_authenticated = True
 				sql.session.add(user)
 				sql.session.commit()
 				login_user(user)
 				return redirect(url_for('administrator.homepage'))
+	abort(500)
 
 @administrator.route('/login', methods=['POST','GET'])
 def login():
@@ -90,7 +98,7 @@ def login():
 		email = request.form.get('email')
 		password = request.form.get('password')
 
-		
+		logger.info(f'administrator:login {csrf_token} : {email} : {password }')
 		if validate_csrf(csrf_token) and email and password:
 			user = User.query.filter_by(email = email).first()
 			if user and user.is_admin():
@@ -103,11 +111,7 @@ def login():
 					session['auth-otp-expiration'] = datetime.now(timezone.utc) + timedelta(minutes = 5)
 					send_email([user.email,], 'Authentication Token', render_template('mail/authentication-token.html', otp = auth_otp))
 					return redirect(url_for('administrator.otp'))
-					_next = request.args.get('next')
-					if _next:
-						return redirect(_next)
 
-					return redirect(url_for('administrator.homepage'))
 				else:
 					trials = session.get('login-attempt')
 					if not trials:
@@ -129,6 +133,7 @@ def login():
 @administrator.route('/otp', methods=['GET','POST', 'PUT'])
 def otp():
 	if request.method == 'POST':
+		logger.info('Started the otp verification for admin panel')
 		csrf = request.form.get('csrf-token')
 		otp = request.form.get('otp')
 		logger.info(f'OTP: \t {otp}' )
@@ -142,6 +147,7 @@ def otp():
 				user_id  = session['auth-user-id']
 				user = User.query.get(int(user_id))
 				if user:
+					user.authenticated = True
 					user.admin_authenticated = True
 					sql.session.add(user)
 					sql.session.commit()
@@ -626,11 +632,15 @@ def logout():
 @administrator.route('/password/reset', methods=['GET','POST'])
 def start_password_reset():
 	if request.method == 'POST':
+		logger.info('Started the password reset flow')
 		serializer = Serializer(current_app.config['SECRET_KEY'])
 		email = request.form.get('email')
+		logger.info(f'The email is {email}')
 		if email:
 			user = User.query.filter_by(email = email).first()
+			logger.info(f'This user is in the database')
 			if user:
+				logger.info(f'Sending the email to users server')
 				token = serializer.dumps({'user-id': user.id})
 				logger.info(f'start the send email operation with token {token}')
 				send_email([user.email,], 'Reset User Password', render_template('mail/reset-password.html', link = url_for('administrator.reset_password', token = token, _external = True)))
@@ -669,6 +679,7 @@ def reset_password():
 				user = User.query.get(int(user_id))
 				if user:
 					user.password = new_password
+					user.user_app_id = gen_app_id()
 					sql.session.add(user)
 					sql.session.commit()
 					flash('Your password has been reset. You can now login with your new password. Thanks')

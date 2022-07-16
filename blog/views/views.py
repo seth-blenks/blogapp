@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from database import User, sql, BlogPost, Category,Role, Tag, Comment, Notification, Ntype
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous.exc import BadSignature
-from ..utils import gen_csrf, validate_csrf, password_required, gen_app_id
+from ..utils import gen_csrf, validate_csrf, password_required, gen_app_id, confirm_account_required
 from ..utils.tools import send_email
 from flask import session, render_template,  current_app, url_for, request, jsonify, flash, redirect, abort, Response
 from google.oauth2 import id_token
@@ -13,7 +13,7 @@ from logging import getLogger
 from datetime import datetime
 
 
-logger = getLogger('gunicorn.error')
+logger = getLogger('testing')
 
 @client.context_processor
 def client_context():
@@ -25,20 +25,28 @@ def client_context():
 
 @client.route('/login/alternate', methods=['POST'])
 def login_alternate():
-	if not current_app.testing:
+	if not current_app.config['PERSONALTESTING']:
 		abort(404)
 
 	email = request.form.get('email')
 	password = request.form.get('password')
 	user = User.query.filter_by(email = email).first()
+
+	logger.info(f'login_alternate: {email} : {password } : {user}')
+	logger.info('Attempting to login alternate user')
 	if user:
 		if user.check_password(password):
+
+			logger.info('Alternate use password verified')
+
 			logger.info('Logged in Test User')
 			user.authenticated = True
 			login_user(user)
 			
 			sql.session.add(user)
 			sql.session.commit()
+
+			logger.info('alternate user logged in')
 			return 'done'
 
 	return 'failed', 401
@@ -219,16 +227,22 @@ def search():
 
 
 @client.route('/comments', methods=['GET','POST'])
+@confirm_account_required
 def comment():
 	if request.method == 'POST':
-		if not current_user.confirm:
+		logger.info('Post Comment Flow Started')
+		if not current_user.is_confirmed():
+			logger.info('User is not Confirmed Aborting')
 			return jsonify(url_for('client.confirm_account')), 302
 
 		csrf_token = request.form.get('csrf-token')
 		comment = request.form.get('comment')
 		post_id = request.form.get('post-id')
 
+		logger.info(f'client:comment method - POST {csrf_token} : {comment} : {post_id}')
+
 		if comment and post_id and validate_csrf(csrf_token):
+			logger.info('Passed the verification block')
 			post = BlogPost.query.get(int(post_id))
 			comment_entry = Comment(comment = comment)
 			comment_entry.user_id = current_user.id
@@ -249,6 +263,8 @@ def comment():
 				comments = [{'admin': current_user.is_admin(),'comment-id': comment.id,  'user-id': current_user.id,
 				'comment-user-id': comment.user.id,'image': comment.user.image_url,'username': comment.user.username,
 				'comment': comment.comment,'date': comment.date.strftime('%A, %d %B %Y @%X')} for comment in post.comments.all()]
+
+				logger.info(f'Comment Submitted')
 				return jsonify(comments)
 		
 		abort(401)
@@ -364,16 +380,21 @@ def reads():
 @client.route('/password/reset', methods=['GET','POST'])
 def start_password_reset():
 	if request.method == 'POST':
+		logger.info('Starte the password reset flow')
 		serializer = Serializer(current_app.config['SECRET_KEY'])
 		email = request.form.get('email')
+
+		logger.info(f'user email address: {email}')
 		if email:
 			user = User.query.filter_by(email = email).first()
 			if user:
 				token = serializer.dumps({'user-id': user.id})
+				logger.info(f'Newly generated token {token}')
 				send_email([user.email,], 'Reset User Password', render_template('mail/reset-password.html', link = url_for('client.reset_password', token = token, _external = True)))
+				
 				return jsonify('Click on the link provided in the email sent to your email address to reset your password. Thanks')
 		return jsonify('User Email not found in database')
-
+	logger.info('Returning the forgot password form')
 	return render_template('forgot-password-form.html', csrf_token = gen_csrf())
 		
 

@@ -13,15 +13,19 @@ import logging
 import math, random
 from datetime import datetime
 
-logger = logging.getLogger('gunicorn.error')
+logger = logging.getLogger('testing')
 
 
 def confirm_account_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
+        logger.info('Checking if account is a confirmed one')
         user = current_user._get_current_object()
-        if user.is_confirmed():
+        if user.is_confirmed() and user.is_authenticated:
+            logger.info('Account is confirmed')
             return f(*args, **kwargs)
+
+        logger.info('Account is not confirmed, redirecting')
         return redirect(url_for('client.confirm_account'))
     return wrapper
  
@@ -45,7 +49,7 @@ def gen_app_id():
     return uuid4().hex + str(datetime.now().timestamp()).replace('.','') 
 
 def validate_csrf(csrf):
-    if current_app.config['TESTING']:
+    if current_app.config['PERSONALTESTING']:
         return True
         
     try:

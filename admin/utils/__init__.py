@@ -11,8 +11,9 @@ from os import path, remove
 from database import Image, sql
 import logging
 import math, random
+from datetime import datetime
 
-logger = logging.getLogger('gunicorn.error')
+logger = logging.getLogger('testing')
 
 
  
@@ -48,11 +49,19 @@ def gen_csrf():
 def admin_required(f):
 	@wraps(f)
 	def wrapper(*args, **kwargs):
-		if not (current_user.admin_authenticated and current_user.is_authenticated):
-			abort(404)
-		else:
-			return f(*args, **kwargs)
+		logger.info(f'Checking if user is authenticated: \n authenticated: {current_user.is_authenticated}')
+		if current_user.is_authenticated:
+			logger.info(f'Checking if user is admin_authenticated: \n admin_authenticated: {current_user.admin_authenticated}')
+			if current_user.admin_authenticated:
+				return f(*args, **kwargs)
+		
+		return abort(404)
+			
 	return wrapper
+
+def gen_app_id():
+    return uuid4().hex + str(datetime.now().timestamp()).replace('.','') 
+
 
 def password_required(f):
 	@wraps(f)

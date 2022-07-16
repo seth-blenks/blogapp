@@ -7,7 +7,7 @@ from google.api_core.exceptions import ServiceUnavailable
 from logging import getLogger
 from ..utils.tools import imapclient
 
-logger = getLogger('gunicorn.error')
+logger = getLogger('testing')
 
 @administrator.route('/analytics/visitors')
 def visitors():

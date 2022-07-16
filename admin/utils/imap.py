@@ -1,8 +1,10 @@
-from imaplib import IMAP4_SSL
+from imaplib import IMAP4
 from email.parser import BytesParser
 from logging import getLogger
 import base64
 import traceback
+
+from flask import current_app
 
 logger = getLogger('gunicorn.error')
 
@@ -25,7 +27,8 @@ class IMAP_CLIENT:
 
 
 	def _connect_imap(self):
-		self.imap = IMAP4_SSL(host=self.host, port = self.port)
+		if current_app.config['PERSONALTESTING']:
+			self.imap = IMAP4(host=self.host, port = self.port)
 		
 	def _select(self,mailbox):
 		self.imap.select(mailbox.upper())
@@ -66,6 +69,7 @@ class IMAP_CLIENT:
 
 
 	def _login(self):
+		return 
 		try:
 			if self.password:
 				self.imap.login(self.username, self.password)

@@ -11,6 +11,7 @@ class Basic:
 	GOOGLE_CLIENT_SECRET = os.environ['GOOGLE_CLIENT_SECRET']
 	GOOGLE_ANALYTICS_PROPERTY_ID = os.environ['GOOGLE_ANALYTICS_PROPERTY_ID']
 	CLIENT_SERVER_HOST = os.environ['CLIENT_HOST']
+	PERSONALTESTING = False
 
 	
 	
@@ -33,8 +34,9 @@ class Development(Basic):
 
 class Testing(Development):
 	SQLALCHEMY_DATABASE_URI = 'postgresql://publicuser:public@localhost:5432/testsecury'
-	TESTING = True
+	PERSONALTESTING = True
 	WTF_CSRF_ENABLED = False
+	SERVER_NAME = 'www.sethcodes.com'
 
 
 

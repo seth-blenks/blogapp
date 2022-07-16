@@ -3,6 +3,7 @@ from .config import configurations
 from database import sql, login_manager
 from .utils.tools import mailer, imapclient
 from .views import administrator
+import testtools
 
 admin_app = Flask(__name__, static_folder='./assets', static_url_path='/admin/assets/')
 

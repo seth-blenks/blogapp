@@ -31,7 +31,7 @@ class Testing(Basic):
 	SQLALCHEMY_DATABASE_URI = 'postgresql://privateuser:private@localhost:5432/testsecury'
 	PERSONALTESTING = True
 	WTF_CSRF_ENABLED = False
-	SERVER_NAME = 'admin.sethcodes.com'
+	SERVER_NAME = 'www.sethcodes.com'
 	IMAP_USERNAME = 'seth'
 	IMAP_PORT = 143
 	IMAP_HOST = 'www.vandies.com'

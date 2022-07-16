@@ -3,6 +3,7 @@ from .config import configurations
 from database import sql, login_manager
 from .utils.tools import mailer
 from .views import client
+import testtools
 
 blog_app = Flask(__name__, static_folder='static')
 

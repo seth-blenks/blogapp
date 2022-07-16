@@ -1,80 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends 'forms.html' %}
+{% block title %}Two Factor Authentication {% endblock %}
+{% block content %}
 
-	<meta charset="utf-8">
-	<title>Sign Up: Folow us</title>
-  <link href='{{url_for("static", filename="vendor/bootstrap/css/bootstrap.css")}}' rel='stylesheet' />
-</head>
-<body>
-  <style>
-html, body{
-  height: 100%;
-}
-  main{
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  input, form{
-    margin: 1rem 0px;
-  }
-
-form{
-  display: flex;
-  flex-direction: column;
-  width: 580px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-  .custom-button{
-    background-color:  #008890;
-    color:  #fff;
-  }
-
-  img{
-    max-width: 360px;
-    width: 100%;
-    height: 150px;
-    display: block;
-  }
-
-  main > div{
-    display: flex;
-    flex-direction: column;
-  }
-
-  main > div > img{
-    align-self: center;
-  }
-  
-form input{
-  padding: 1.02rem 0.35rem;
-}
-
-form button {
-  padding: 1.02rem 0.35rem;
-  margin-bottom: 10px;
-}
-
-form a{
-  text-decoration: none;
-  color: grey;
-  font-size: 0.875rem;
-  position: relative;
-  display: block;
-}
-
-
-  
-  
-  </style>
-	<main>
-	     <div class="col-11 col-lg-7 col-md-7">
-        <img src='/static/images/logo.png' />
         <form role="form" method='post'>
           <h2> Authentication OTP </h2>
           <p> Please enter the authentication otp sent to your email address. </p>
@@ -90,11 +17,7 @@ form a{
           <button type="submit" class='btn custom-button form-control'>Continue ...</button>
           <a id='request_token'>Resend Token</a>
         </form>
-        
-      </div>
-  </main>
 
- <script type="text/javascript" src='/assets/vendor/bootstrap/js/bootstrap.bundle.js'></script>
  <script>
   let resend = document.querySelector('#request_token')
   console.log(resend)
@@ -114,5 +37,4 @@ form a{
     })
   })
 </script>
-</body>
-</html>
+{% endblock %}

@@ -8,7 +8,7 @@ import bleach
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 import logging 
 
-logger = logging.getLogger('gunicorn.error')
+logger = logging.getLogger('testing')
 
 sql = SQLAlchemy()
 
@@ -54,6 +54,7 @@ class Role(sql.Model):
 
 	@classmethod
 	def setup(self):
+		logger.info('Setting up roles')
 		permissions = [
 			{
 			'name': 'admin',
@@ -126,7 +127,7 @@ class User(sql.Model, UserMixin):
 				logger.info('user email is email of admin.')
 				role = Role.query.filter_by(name='admin').first()
 
-				logger.info(f'User role is now set to {self.role}')
+				logger.info(f'User role is now set to {role}')
 				self.role = role
 
 			else:
@@ -135,6 +136,11 @@ class User(sql.Model, UserMixin):
 				logger.info(f'adding user role to this user {self.role}')
 		else:
 			logger.info(f'User has role {self.role}')
+
+
+	def is_confirmed(self):
+		return self.confirm
+
 
 
 
@@ -200,6 +206,9 @@ class Visitor(AnonymousUserMixin):
 		return False
 
 	def is_admin(self):
+		return False
+
+	def is_confirmed(self):
 		return False
 
 

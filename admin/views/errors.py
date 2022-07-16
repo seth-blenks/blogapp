@@ -2,7 +2,7 @@ from . import administrator
 from flask import render_template
 from logging import getLogger
 
-logger = getLogger('gunicorn.error')
+logger = getLogger('testing')
 
 @administrator.errorhandler(400)
 def handle_bad_request(e):
